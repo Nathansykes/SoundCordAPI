@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Project.Domain;
 
 namespace Project.Infrastructure.Model;
 
@@ -27,4 +28,17 @@ public interface IApplicationDbContext : IDisposable
     EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
     EntityEntry Entry(object entity);
     DbSet<TEntity> Set<TEntity>() where TEntity : class;
+}
+
+public interface IUserApplicationDbContext : IApplicationDbContext
+{
+    public AspNetUser ContextUser { get; }
+}
+
+public class UserApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserAccessor userAccessor) 
+    : ApplicationDbContext(options), IUserApplicationDbContext
+{
+    private readonly IApplicationUser _user = userAccessor.User;
+    private AspNetUser? _contextUser;
+    public AspNetUser ContextUser => _contextUser ??= AspNetUsers.First(x => x.Id == _user.Id);
 }

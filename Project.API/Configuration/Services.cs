@@ -1,17 +1,26 @@
 ﻿using Project.Auth;
-using Project.Domain.Repositories;
 using Project.Generic;
-using Project.Infrastructure.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Logging.AzureAppServices;
 using System.Reflection;
+using Project.Infrastructure.Model;
+using Project.Domain;
+using Microsoft.AspNetCore.Identity;
+using Project.Auth.Identity.Models;
+using Project.Domain.Groups;
+using Project.Application.Groups;
+using Project.Infrastructure.Model.Entities;
+using Project.Infrastructure.Repositories;
 
 namespace Project.API.Configuration;
 
 
 public static class ServicesExtensions
 {
+    private static readonly Assembly[] _applicationAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+        .Where(x => x.FullName is not null && x.FullName.StartsWith("Project.")).ToArray();
+
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddApplication(config);
@@ -38,7 +47,7 @@ public static class ServicesExtensions
         return builder;
     }
 
-    public static void AddApplication(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration config)
     {
         services.AddProblemDetails(options =>
         {
@@ -54,53 +63,52 @@ public static class ServicesExtensions
         services.AddControllers();
         services.AddHttpContextAccessor();
         services.AddScoped<AuthorizationExtensions>();
+
+        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>(services =>
+        {
+            var httpContext = services.GetRequiredService<IHttpContextAccessor>();
+            var user = httpContext.HttpContext?.User;
+            if (user is null || user.Identity?.Name is null || (!user.Identity.IsAuthenticated))
+            {
+                throw new InvalidOperationException();
+            }
+
+            var userMgr = services.GetRequiredService<UserManager<ApplicationUser>>();
+            var appUser = new ApplicationUserModel
+            {
+                Id = userMgr.GetUserId(user)!,
+                UserName = userMgr.GetUserName(user)!
+            };
+            return new CurrentUserAccessor(appUser);
+        });
+
+        services.AddClassesAsImplementedInterface(_applicationAssemblies, typeof(IModelMapper<,>));
+        
+        services.AddGroups();
+
+        return services;
+    }
+
+    public static IServiceCollection AddGroups(this IServiceCollection services)
+    {
+        services.AddScoped<IGroupService, GroupService>();
+        services.AddScoped<IGroupRepository<Group>, GroupRepository>();
+        return services;
     }
 
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         services.AddDbContext<IApplicationDbContext, ApplicationDbContext>(options =>
-            options.UseSqlServer(config.GetConnectionString("Database")));
+            options.UseLazyLoadingProxies()
+                   .UseSqlServer(config.GetConnectionString("Database")));
 
-        services.AddClassesAsImplementedInterface(Assembly.GetAssembly(typeof(IApplicationDbContext))!, typeof(IRepository<,>));
+        services.AddDbContext<IUserApplicationDbContext, UserApplicationDbContext>(options =>
+            options.UseLazyLoadingProxies()
+                   .UseSqlServer(config.GetConnectionString("Database")));
 
         return services;
     }
 
-    public static List<TypeInfo> GetTypesAssignableTo(this Assembly assembly, Type compareType)
-    {
-        var typeInfoList = assembly.DefinedTypes.Where(x =>
-        {
-            return x.IsClass && !x.IsAbstract && x != compareType
-                    && x.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == compareType);
-        }).ToList();
-
-        return typeInfoList;
-    }
-
-    public static void AddClassesAsImplementedInterface(
-            this IServiceCollection services,
-            Assembly assembly,
-            Type compareType,
-            ServiceLifetime lifetime = ServiceLifetime.Scoped)
-    {
-        assembly.GetTypesAssignableTo(compareType).ForEach((type) =>
-        {
-            foreach (var implementedInterface in type.ImplementedInterfaces)
-            {
-                switch (lifetime)
-                {
-                    case ServiceLifetime.Scoped:
-                        services.AddScoped(implementedInterface, type);
-                        break;
-                    case ServiceLifetime.Singleton:
-                        services.AddSingleton(implementedInterface, type);
-                        break;
-                    case ServiceLifetime.Transient:
-                        services.AddTransient(implementedInterface, type);
-                        break;
-                }
-            }
-        });
-    }
+    
 }

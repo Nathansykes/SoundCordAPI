@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Project.Auth;
 public static class Configuration
 {
-    public static void AddIdentity(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration config)
     {
         services.AddAuthentication(IdentityConstants.BearerScheme)
                 .AddBearerToken(IdentityConstants.BearerScheme);
@@ -26,5 +26,6 @@ public static class Configuration
 
         services.AddScoped<AuthorizationService>();
         services.AddScoped<RolesService>();
+        return services;
     }
 }

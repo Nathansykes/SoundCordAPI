@@ -18,6 +18,7 @@ public static class SwaggerConfig
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
+            options.EnableAnnotations();
             options.AddSecurityDefinition(IdentityConstants.BearerScheme, new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,

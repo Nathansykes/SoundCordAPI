@@ -20,3 +20,11 @@ public class ValidationException : DomainException
     public ValidationException(string message, Exception innerException)
         : base(message, 400, innerException) { }
 }
+
+public class NotFoundException : DomainException
+{
+    public NotFoundException(string message)
+        : base(message, 404) { }
+    public NotFoundException(string message, Exception innerException)
+        : base(message, 404, innerException) { }
+}
