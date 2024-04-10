@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Logging.AzureAppServices;
 using System.Reflection;
 
-namespace Project.Application.Configuration;
+namespace Project.API.Configuration;
 
 
 public static class ServicesExtensions

@@ -1,4 +1,4 @@
-﻿using Project.Application.Authorization;
+﻿using Project.API.Authorization;
 using Project.Auth;
 using Project.Auth.Identity.Models;
 using Project.Auth.Roles;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Project.Application.Configuration;
+namespace Project.API.Configuration;
 
 public static class SwaggerConfig
 {

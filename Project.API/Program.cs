@@ -1,4 +1,4 @@
-using Project.Application.Configuration;
+using Project.API.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

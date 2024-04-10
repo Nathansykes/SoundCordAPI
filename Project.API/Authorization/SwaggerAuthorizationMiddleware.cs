@@ -4,7 +4,7 @@ using Project.Auth.Roles;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
 
-namespace Project.Application.Authorization;
+namespace Project.API.Authorization;
 
 public class SwaggerAuthorizationMiddleware(
     UserManager<ApplicationUser> userManager,

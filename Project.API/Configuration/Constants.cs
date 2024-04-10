@@ -1,4 +1,4 @@
-﻿namespace Project.Application.Configuration;
+﻿namespace Project.API.Configuration;
 
 public static class Constants
 {

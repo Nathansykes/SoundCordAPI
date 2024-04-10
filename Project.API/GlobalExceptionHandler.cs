@@ -3,7 +3,7 @@ using Project.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace Project.Application;
+namespace Project.API;
 
 public class GlobalExceptionHandler(
     IWebHostEnvironment environment,

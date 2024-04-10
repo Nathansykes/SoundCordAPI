@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Project.Application.Controllers;
+namespace Project.API.Controllers;
 
 [ApiController]
 [Authorize]

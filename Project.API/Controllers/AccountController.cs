@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Project.Application.Controllers;
+namespace Project.API.Controllers;
 
 [Route("api/[controller]/[action]")]
 public class AccountController(AuthorizationService authorizationService) : BaseController

@@ -1,7 +1,7 @@
-﻿using Project.Application.Authorization;
+﻿using Project.API.Authorization;
 using Microsoft.AspNetCore.Routing.Patterns;
 
-namespace Project.Application.Configuration;
+namespace Project.API.Configuration;
 
 public static class ApplicationExtensions
 {

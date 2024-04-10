@@ -25,30 +25,30 @@ public class RolesService(UserManager<ApplicationUser> userManager, RoleManager<
     {
         return (await _roleManager.Roles.ToListAsync()).Select(x => x.Name!).ToList();
     }
-    public async Task AddUserToRoleAsync(string email, string role)
+    public async Task AddUserToRoleAsync(string userName, string role)
     {
-        var user = await _userManager.FindByNameAsync(email);
+        var user = await _userManager.FindByNameAsync(userName);
         if (user is null)
             return;
         await _userManager.AddToRoleAsync(user, role);
     }
-    public async Task RemoveUserFromRoleAsync(string email, string role)
+    public async Task RemoveUserFromRoleAsync(string userName, string role)
     {
-        var user = await _userManager.FindByNameAsync(email);
+        var user = await _userManager.FindByNameAsync(userName);
         if (user is null)
             return;
         await _userManager.RemoveFromRoleAsync(user, role);
     }
-    public async Task<List<string>> GetUserRolesAsync(string email)
+    public async Task<List<string>> GetUserRolesAsync(string userName)
     {
-        var user = await _userManager.FindByNameAsync(email);
+        var user = await _userManager.FindByNameAsync(userName);
         if (user is null)
             return [];
         return (await _userManager.GetRolesAsync(user)).ToList();
     }
-    public async Task<bool> IsUserInRoleAsync(string email, string role)
+    public async Task<bool> IsUserInRoleAsync(string userName, string role)
     {
-        var user = await _userManager.FindByNameAsync(email);
+        var user = await _userManager.FindByNameAsync(userName);
         if (user is null)
             return false;
         return await _userManager.IsInRoleAsync(user, role);
