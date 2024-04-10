@@ -1,7 +1,7 @@
-﻿using Project.Auth;
+﻿using Microsoft.AspNetCore.Identity;
+using Project.Auth;
 using Project.Auth.Identity.Models;
 using Project.Auth.Roles;
-using Microsoft.AspNetCore.Identity;
 using System.Net;
 
 namespace Project.API.Authorization;

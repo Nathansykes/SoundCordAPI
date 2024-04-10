@@ -1,5 +1,4 @@
 ﻿using Project.API.Authorization;
-using Microsoft.AspNetCore.Routing.Patterns;
 
 namespace Project.API.Configuration;
 

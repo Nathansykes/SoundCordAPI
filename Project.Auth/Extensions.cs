@@ -1,6 +1,6 @@
-﻿using Project.Auth.Identity.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Project.Auth.Identity.Models;
 using System.Text;
 
 namespace Project.Auth;

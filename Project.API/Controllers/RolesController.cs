@@ -1,7 +1,6 @@
-﻿using Project.Auth.Roles;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Project.Auth.Roles;
 using Project.Auth.Roles.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace Project.API.Controllers;
 

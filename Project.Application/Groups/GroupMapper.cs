@@ -1,12 +1,7 @@
-﻿using Project.Domain.Groups;
-using Project.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Project.Infrastructure.Model.Entities;
+﻿using Project.Domain;
+using Project.Domain.Groups;
 using Project.Generic;
+using Project.Infrastructure.Model.Entities;
 
 namespace Project.Application.Groups;
 public class GroupMapper : IModelMapper<Group, GroupModel>

@@ -1,17 +1,17 @@
-﻿using Project.Auth;
-using Project.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Logging.AzureAppServices;
-using System.Reflection;
-using Project.Infrastructure.Model;
-using Project.Domain;
-using Microsoft.AspNetCore.Identity;
-using Project.Auth.Identity.Models;
-using Project.Domain.Groups;
 using Project.Application.Groups;
+using Project.Auth;
+using Project.Auth.Identity.Models;
+using Project.Domain;
+using Project.Domain.Groups;
+using Project.Generic;
+using Project.Infrastructure.Model;
 using Project.Infrastructure.Model.Entities;
 using Project.Infrastructure.Repositories;
+using System.Reflection;
 
 namespace Project.API.Configuration;
 
@@ -83,7 +83,7 @@ public static class ServicesExtensions
         });
 
         services.AddClassesAsImplementedInterface(_applicationAssemblies, typeof(IModelMapper<,>));
-        
+
         services.AddGroups();
 
         return services;
@@ -110,5 +110,5 @@ public static class ServicesExtensions
         return services;
     }
 
-    
+
 }

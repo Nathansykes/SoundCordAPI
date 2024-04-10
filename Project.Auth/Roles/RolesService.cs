@@ -1,6 +1,6 @@
-﻿using Project.Auth.Identity.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Project.Auth.Identity.Models;
 
 namespace Project.Auth.Roles;
 public class RolesService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)

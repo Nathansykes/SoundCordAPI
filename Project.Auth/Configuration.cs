@@ -1,10 +1,10 @@
-﻿using Project.Auth.Identity;
-using Project.Auth.Identity.Models;
-using Project.Auth.Roles;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Project.Auth.Identity;
+using Project.Auth.Identity.Models;
+using Project.Auth.Roles;
 
 namespace Project.Auth;
 public static class Configuration

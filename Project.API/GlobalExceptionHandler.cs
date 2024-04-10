@@ -1,7 +1,7 @@
-﻿using Project.Auth.Roles;
-using Project.Domain.Exceptions;
-using Microsoft.AspNetCore.Diagnostics;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Project.Auth.Roles;
+using Project.Domain.Exceptions;
 
 namespace Project.API;
 
@@ -53,8 +53,8 @@ public class GlobalExceptionHandler(
     }
 
     private bool ShowDeveloperError(HttpContext httpContext)
-        => _environment.IsDevelopment() 
-        || _configuration.GetValue("DetailedExceptionLogging", false) 
+        => _environment.IsDevelopment()
+        || _configuration.GetValue("DetailedExceptionLogging", false)
         || httpContext.User.IsInRole(UserRoles.Developer);
 
     private async Task WriteResponse(HttpContext httpContext, int statusCode, string title, string description, CancellationToken cancellationToken)

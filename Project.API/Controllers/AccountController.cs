@@ -1,9 +1,8 @@
-﻿using Project.Auth.Identity;
-using Project.Auth.Identity.Models;
-using Project.Auth.Roles;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Project.Auth.Identity.Models;
+using Project.Auth.Roles;
 
 namespace Project.API.Controllers;
 
@@ -78,7 +77,7 @@ public class AccountController(AuthorizationService authorizationService) : Base
             else
                 ModelState.AddModelError(error.Code, error.Description);
         }
-        
+
         return ValidationProblem(ModelState);
     }
 }

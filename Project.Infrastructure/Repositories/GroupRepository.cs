@@ -1,16 +1,7 @@
-﻿using IdentityModel;
-using Microsoft.EntityFrameworkCore;
-using Project.Application.Groups;
-using Project.Domain;
+﻿using Project.Application.Groups;
 using Project.Domain.Exceptions;
 using Project.Infrastructure.Model;
 using Project.Infrastructure.Model.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Infrastructure.Repositories;
 
@@ -28,7 +19,7 @@ public class GroupRepository(IUserApplicationDbContext context) : IGroupReposito
 
     public void DeleteById(Guid id)
     {
-        var entity = _context.Groups.FirstOrDefault(x => x.Id == id && x.CreatedByUserId == _context.ContextUser.Id) 
+        var entity = _context.Groups.FirstOrDefault(x => x.Id == id && x.CreatedByUserId == _context.ContextUser.Id)
             ?? throw new NotFoundException($"Could not delete group {id} because it does not exists or the user did not create it");
         _context.Groups.Remove(entity);
         _context.SaveChanges();

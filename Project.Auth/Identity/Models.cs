@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Project.Domain;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Project.Auth.Identity.Models;
 

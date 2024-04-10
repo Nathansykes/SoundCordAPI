@@ -1,8 +1,8 @@
-﻿using Project.Infrastructure.Model.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Project.Domain;
+using Project.Infrastructure.Model.Entities;
 
 namespace Project.Infrastructure.Model;
 
@@ -35,7 +35,7 @@ public interface IUserApplicationDbContext : IApplicationDbContext
     public AspNetUser ContextUser { get; }
 }
 
-public class UserApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserAccessor userAccessor) 
+public class UserApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserAccessor userAccessor)
     : ApplicationDbContext(options), IUserApplicationDbContext
 {
     private readonly IApplicationUser _user = userAccessor.User;

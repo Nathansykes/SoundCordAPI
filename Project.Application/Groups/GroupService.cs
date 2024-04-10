@@ -1,26 +1,18 @@
-﻿using Project.Domain.Groups;
-using Project.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Project.Domain;
+using Project.Domain.Groups;
 using Project.Infrastructure.Model.Entities;
-using System.Runtime.CompilerServices;
-using Project.Infrastructure.Model;
-using Project.Infrastructure.Repositories;
 
 namespace Project.Application.Groups;
 
 public class GroupService(
-    IGroupRepository<Group> groupRepository, 
+    IGroupRepository<Group> groupRepository,
     IModelMapper<Group, GroupModel> modelMapper,
     ICurrentUserAccessor currentUserAccessor) : IGroupService
 {
     private readonly IGroupRepository<Group> _groupRepository = groupRepository;
     private readonly IModelMapper<Group, GroupModel> _modelMapper = modelMapper;
     private readonly IApplicationUser _user = currentUserAccessor.User;
-    
+
     public GroupModel CreateGroup(GroupModel group)
     {
         var entity = _modelMapper.MapToDatabaseModel(group);
