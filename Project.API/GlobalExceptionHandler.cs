@@ -40,6 +40,12 @@ public class GlobalExceptionHandler(
         if (domainException.StatusCode >= 500 || _configuration.GetValue("DetailedExceptionLogging", false))
             LogException(domainException, httpContext);
 
+        if (domainException is FriendlyException frEx && domainException.StatusCode < 300)
+        {
+            await WriteResponse(httpContext, frEx.StatusCode, frEx.Message, frEx.Description, cancellationToken);
+            return;
+        }
+
         if (ShowDeveloperError(httpContext))
             await WriteResponse(httpContext, domainException.StatusCode, domainException.Message, domainException.StackTrace ?? "", cancellationToken);
         else

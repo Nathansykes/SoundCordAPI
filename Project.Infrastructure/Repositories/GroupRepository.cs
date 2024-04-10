@@ -8,6 +8,7 @@ using Project.Infrastructure.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,6 +60,8 @@ public class GroupRepository(IUserApplicationDbContext context) : IGroupReposito
     {
         var user = _context.AspNetUsers.FirstOrDefault(x => x.UserName == userName) ?? throw new NotFoundException($"No user found with username: {userName}");
         var group = GetById(id);
+        if (group.Users.Any(x => x.UserName == userName))
+            throw new ValidationException($"{userName} is already in group: {id}");
         group.Users.Add(user);
         _context.SaveChanges();
     }

@@ -11,6 +11,41 @@ public class DomainException : Exception
         : base(message) => StatusCode = statusCode;
     public DomainException(string message, int statusCode, Exception innerException)
         : base(message, innerException) => StatusCode = statusCode;
+
+    public DomainException(string message, string description)
+        : base(message) => Description = description;
+    public DomainException(string message, Exception innerException, string description)
+        : base(message, innerException) => Description = description;
+
+    public DomainException(string message, int statusCode, string description)
+        : base(message)
+    {
+        StatusCode = statusCode;
+        Description = description;
+    }
+
+    public DomainException(string message, int statusCode, Exception innerException, string description)
+        : base(message, innerException)
+    {
+        StatusCode = statusCode;
+        Description = description;
+    }
+
+    public string Description { get; set; } = "";
+}
+
+public class FriendlyException : DomainException
+{
+    public FriendlyException(string message, int statusCode) : base(message, statusCode)
+    {
+        if (statusCode >= 400)
+            throw new InvalidOperationException("Friendly Exception Status Code should be < 400");
+    }
+    public FriendlyException(string message, int statusCode, string description) : base(message, statusCode, description)
+    {
+        if (statusCode >= 400)
+            throw new InvalidOperationException("Friendly Exception Status Code should be < 400");
+    }
 }
 
 public class ValidationException : DomainException

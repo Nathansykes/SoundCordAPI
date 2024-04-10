@@ -1,6 +1,8 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using Project.Generic;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -22,7 +24,7 @@ public class GroupModel
     [SwaggerSchema(ReadOnly = true)]
     public string CreatedByUserId { get; set; } = "";
     [SwaggerSchema(ReadOnly = true)]
-    public Dictionary<Guid, string> Channels { get; set; } = [];
+    public List<IdNameModel> Channels { get; set; } = [];
     [SwaggerSchema(ReadOnly = true)]
     public ICollection<string> Users { get; set; } = [];
 }

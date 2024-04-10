@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Project.Infrastructure.Model.Entities;
+using Project.Generic;
 
 namespace Project.Application.Groups;
 public class GroupMapper : IModelMapper<Group, GroupModel>
@@ -26,7 +27,7 @@ public class GroupMapper : IModelMapper<Group, GroupModel>
             Id = databaseModel.Id,
             GroupName = databaseModel.GroupName,
             CreatedByUserId = databaseModel.CreatedByUserId,
-            Channels = databaseModel.Channels.ToDictionary(x => x.Id, x => x.ChannelName),
+            Channels = databaseModel.Channels.Select(x => new IdNameModel(x.Id, x.ChannelName)).ToList(),
             Users = databaseModel.Users.Select(x => x.UserName!).ToList(),
         };
         return domainModel;
