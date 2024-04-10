@@ -27,7 +27,7 @@ public class GroupMapper : IModelMapper<Group, GroupModel>
             GroupName = databaseModel.GroupName,
             CreatedByUserId = databaseModel.CreatedByUserId,
             Channels = databaseModel.Channels.ToDictionary(x => x.Id, x => x.ChannelName),
-            Users = databaseModel.Users.Select(x => x.Id).ToList(),
+            Users = databaseModel.Users.Select(x => x.UserName!).ToList(),
         };
         return domainModel;
     }
