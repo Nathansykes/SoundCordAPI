@@ -13,8 +13,13 @@ public interface IApplicationDbContext : IDisposable
     DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
     DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
     DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-    DbSet<Link> Links { get; set; }
-
+    DbSet<Channel> Channels { get; set; }
+    DbSet<ChannelMessage> ChannelMessages { get; set; }
+    DbSet<FileMetadatum> FileMetadata { get; set; }
+    DbSet<Group> Groups { get; set; }
+    DbSet<Message> Messages { get; set; }
+    DbSet<Song> Songs { get; set; }
+    DbSet<SongRevision> SongRevisions { get; set; }
 
     int SaveChanges();
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
@@ -23,5 +28,3 @@ public interface IApplicationDbContext : IDisposable
     EntityEntry Entry(object entity);
     DbSet<TEntity> Set<TEntity>() where TEntity : class;
 }
-
-public partial class ApplicationDbContext : IApplicationDbContext { }

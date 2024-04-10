@@ -1,4 +1,7 @@
-﻿namespace Project.Infrastructure.Model.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Project.Infrastructure.Model.Entities;
 
 public partial class AspNetUserLogin
 {

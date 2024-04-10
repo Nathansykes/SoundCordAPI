@@ -3,15 +3,17 @@ using System.Collections.Generic;
 
 namespace Project.Infrastructure.Model.Entities;
 
-public partial class AspNetUserClaim
+public partial class Message
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
+
+    public string Content { get; set; } = null!;
 
     public string UserId { get; set; } = null!;
 
-    public string? ClaimType { get; set; }
+    public DateTime Utc { get; set; }
 
-    public string? ClaimValue { get; set; }
+    public virtual ChannelMessage? ChannelMessage { get; set; }
 
     public virtual AspNetUser User { get; set; } = null!;
 }

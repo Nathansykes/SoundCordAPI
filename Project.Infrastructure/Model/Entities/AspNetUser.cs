@@ -1,4 +1,7 @@
-﻿namespace Project.Infrastructure.Model.Entities;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Project.Infrastructure.Model.Entities;
 
 public partial class AspNetUser
 {
@@ -37,6 +40,18 @@ public partial class AspNetUser
     public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; } = new List<AspNetUserLogin>();
 
     public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; } = new List<AspNetUserToken>();
+
+    public virtual ICollection<FileMetadatum> FileMetadata { get; set; } = new List<FileMetadatum>();
+
+    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
+    public virtual ICollection<SongRevision> SongRevisions { get; set; } = new List<SongRevision>();
+
+    public virtual ICollection<Song> Songs { get; set; } = new List<Song>();
+
+    public virtual ICollection<Group> GroupsNavigation { get; set; } = new List<Group>();
 
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();
 }
