@@ -1,0 +1,23 @@
+{
+  "DataSource": "Name=ConnectionStrings:Scaffold",
+  "Provider": "Microsoft.EntityFrameworkCore.SqlServer",
+  "ContextName": "ApplicationDbContext",
+  "ContextDirectory": "Model",
+  "OutputDirectory": "Model/Entities",
+  "ContextNamespace": "Project.Infrastructure.Model",
+  "Namespace": "Project.Infrastructure.Model.Entities",
+  "Schemas": null,
+  "Tables": null,
+  "ProjectDirectory": "../Project.Infrastructure",
+  "StartupProjectDirectory": "../Project.API",
+  "TargetFramework": null,
+  "Configuration": null,
+  "TargetRuntime": null,
+  "DataAnnotations": false,
+  "UseDatabaseNames": true,
+  "NoOnConfiguring": true,
+  "NoPluralize": false,
+  "Force": true,
+  "NoBuild": true,
+  "Verbose": true
+}
