@@ -14,7 +14,7 @@ public class GroupModel
 
 
     [SwaggerSchema(ReadOnly = true)]
-    public string CreatedByUserId { get; set; } = "";
+    public string CreatedByUser { get; set; } = "";
     [SwaggerSchema(ReadOnly = true)]
     public List<IdNameModel> Channels { get; set; } = [];
     [SwaggerSchema(ReadOnly = true)]

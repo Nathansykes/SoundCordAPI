@@ -8,23 +8,19 @@ public class GroupMapper : IModelMapper<Group, GroupModel>
 {
     public Group MapToDatabaseModel(GroupModel domainModel, Group? databaseModel = null)
     {
-        databaseModel ??= new()
-        {
-            GroupName = domainModel.GroupName,
-        };
+        databaseModel ??= new();
+        databaseModel.GroupName = domainModel.GroupName;
         return databaseModel;
     }
 
     public GroupModel MapToDomainModel(Group databaseModel, GroupModel? domainModel = null)
     {
-        domainModel ??= new()
-        {
-            Id = databaseModel.Id,
-            GroupName = databaseModel.GroupName,
-            CreatedByUserId = databaseModel.CreatedByUserId,
-            Channels = databaseModel.Channels.Select(x => new IdNameModel(x.Id, x.ChannelName)).ToList(),
-            Users = databaseModel.Users.Select(x => x.UserName!).ToList(),
-        };
+        domainModel ??= new();
+        domainModel.Id = databaseModel.Id;
+        domainModel.GroupName = databaseModel.GroupName;
+        domainModel.CreatedByUser = databaseModel.CreatedByUser.UserName!;
+        domainModel.Channels = databaseModel.Channels.Select(x => new IdNameModel(x.Id, x.ChannelName)).ToList();
+        domainModel.Users = databaseModel.Users.Select(x => x.UserName!).ToList();
         return domainModel;
     }
 }
