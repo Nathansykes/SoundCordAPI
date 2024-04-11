@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Project.API.Authorization;
+using Project.API.Hubs;
 using Project.Auth;
 using Project.Auth.Identity.Models;
 using Project.Auth.Roles;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 namespace Project.API.Configuration;
 
@@ -28,6 +30,10 @@ public static class SwaggerConfig
                 Scheme = "Bearer",
             });
             options.DocumentFilter<SwaggerAuthorizationFilter>();
+            options.AddSignalRSwaggerGen(o =>
+            {
+                o.ScanAssembly(Assembly.GetAssembly(typeof(BaseHub)));
+            });
         });
         return services;
     }

@@ -1,4 +1,5 @@
 ﻿using Project.API.Authorization;
+using Project.API.Hubs;
 
 namespace Project.API.Configuration;
 
@@ -21,6 +22,8 @@ public static class ApplicationExtensions
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.MapHub<MessageHub>("/messagehub");
 
         return app;
     }

@@ -28,6 +28,7 @@ public static class ServicesExtensions
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config)
     {
         services.AddApplication(config);
+        services.AddDomain();
         services.AddSwagger();
         services.AddIdentity(config);
         services.AddInfrastructure(config);
@@ -69,6 +70,13 @@ public static class ServicesExtensions
         services.AddScoped<AuthorizationExtensions>();
         services.AddRouting(options => options.LowercaseUrls = true);
 
+        services.AddSignalR();
+
+        return services;
+    }
+
+    public static IServiceCollection AddDomain(this IServiceCollection services)
+    {
         services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>(services =>
         {
             var httpContext = services.GetRequiredService<IHttpContextAccessor>();
@@ -92,7 +100,6 @@ public static class ServicesExtensions
         services.AddGroups();
         services.AddChannels();
         services.AddMessages();
-
         return services;
     }
 
