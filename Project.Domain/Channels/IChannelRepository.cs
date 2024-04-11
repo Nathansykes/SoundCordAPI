@@ -1,7 +1,13 @@
 ﻿using Project.Domain;
+using System.Threading.Channels;
 
 namespace Project.Domain.Channels;
-public interface IChannelRepository<TGroupEntity> : IRepository<TGroupEntity, Guid> where TGroupEntity : class, new()
+public interface IChannelRepository<TChannelEntity> where TChannelEntity : new()
 {
-    IQueryable<TGroupEntity> GetByGroupId(Guid groupId);
+    TChannelEntity Create(TChannelEntity entity);
+    void DeleteById(Guid id);
+    IQueryable<TChannelEntity> GetAll();
+    IQueryable<TChannelEntity> GetByGroupId(Guid groupId);
+    TChannelEntity GetById(Guid id);
+    bool TryGetById(Guid id, out TChannelEntity? entity);
 }
