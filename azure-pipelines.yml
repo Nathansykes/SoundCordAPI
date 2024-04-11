@@ -7,9 +7,7 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'windows-latest'
-  name: 'DESKTOP-F01HSUA'
+pool: Default
 
 variables:
   solution: '**/*.sln'
