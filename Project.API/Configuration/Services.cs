@@ -4,11 +4,13 @@ using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Logging.AzureAppServices;
 using Project.Application.Channels;
 using Project.Application.Groups;
+using Project.Application.Messages;
 using Project.Auth;
 using Project.Auth.Identity.Models;
 using Project.Domain;
 using Project.Domain.Channels;
 using Project.Domain.Groups;
+using Project.Domain.Messages;
 using Project.Generic;
 using Project.Infrastructure.Model;
 using Project.Infrastructure.Model.Entities;
@@ -89,6 +91,7 @@ public static class ServicesExtensions
 
         services.AddGroups();
         services.AddChannels();
+        services.AddMessages();
 
         return services;
     }
@@ -103,6 +106,12 @@ public static class ServicesExtensions
     {
         services.AddScoped<IChannelService, ChannelService>();
         services.AddScoped<IChannelRepository<Channel>, ChannelRepository>();
+        return services;
+    }
+    public static IServiceCollection AddMessages(this IServiceCollection services)
+    {
+        services.AddScoped<IMessageService, MessageService>();
+        services.AddScoped<IMessageRepository<Message>, MessageRepository>();
         return services;
     }
 
