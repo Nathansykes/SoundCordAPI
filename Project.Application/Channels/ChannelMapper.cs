@@ -2,11 +2,6 @@
 using Project.Domain.Channels;
 using Project.Generic;
 using Project.Infrastructure.Model.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Application.Channels;
 public class ChannelMapper : IModelMapper<Channel, ChannelModel>
@@ -27,7 +22,7 @@ public class ChannelMapper : IModelMapper<Channel, ChannelModel>
         domainModel.ChannelName = databaseModel.ChannelName;
         if (databaseModel.Song != null)
             domainModel.Song = (IdNameModel?)new IdNameModel(databaseModel.Song.Id, databaseModel.Song.SongName);
-        else 
+        else
             domainModel.Song = null;
         return domainModel;
     }

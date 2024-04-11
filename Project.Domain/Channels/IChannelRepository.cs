@@ -1,7 +1,4 @@
-﻿using Project.Domain;
-using System.Threading.Channels;
-
-namespace Project.Domain.Channels;
+﻿namespace Project.Domain.Channels;
 public interface IChannelRepository<TChannelEntity> where TChannelEntity : new()
 {
     TChannelEntity Create(TChannelEntity entity);

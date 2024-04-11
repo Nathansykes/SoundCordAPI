@@ -1,11 +1,6 @@
 ﻿using Project.Domain;
 using Project.Domain.Messages;
 using Project.Infrastructure.Model.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Application.Messages;
 public class MessageService(IMessageRepository<Message> messageRepositor1y, IModelMapper<Message, MessageModel> mapper) : IMessageService
@@ -22,7 +17,8 @@ public class MessageService(IMessageRepository<Message> messageRepositor1y, IMod
 
     public MessageModel GetMessage(Guid messageId)
     {
-        return _mapper.MapToDomainModel(_messageRepository.GetById(messageId));
+        var entity = _messageRepository.GetById(messageId);
+        return _mapper.MapToDomainModel(entity);
     }
 
     public ICollection<MessageModel> GetMessages(Guid channelId)

@@ -1,6 +1,4 @@
-﻿using Project.Application.Groups;
-using Project.Domain;
-using Project.Domain.Channels;
+﻿using Project.Domain.Channels;
 using Project.Domain.Exceptions;
 using Project.Infrastructure.Model;
 using Project.Infrastructure.Model.Entities;

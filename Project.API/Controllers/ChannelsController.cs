@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Project.Domain.Channels;
 
-namespace Project.API.Controllers; 
+namespace Project.API.Controllers;
 
 [Route("api/Groups/{groupId}/[controller]")]
 public class ChannelsController(IChannelService channelService) : BaseController

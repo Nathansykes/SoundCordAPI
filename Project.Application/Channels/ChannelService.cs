@@ -1,19 +1,14 @@
 ﻿using Project.Domain;
 using Project.Domain.Channels;
 using Project.Infrastructure.Model.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Application.Channels;
 public class ChannelService(
     IChannelRepository<Channel> channelRepository,
-    IModelMapper<Channel,ChannelModel> mapper) : IChannelService
+    IModelMapper<Channel, ChannelModel> mapper) : IChannelService
 {
     private readonly IChannelRepository<Channel> _channelRepository = channelRepository;
-    private readonly IModelMapper<Channel,ChannelModel> _mapper = mapper;
+    private readonly IModelMapper<Channel, ChannelModel> _mapper = mapper;
 
     public ChannelModel CreateChannel(Guid groupId, ChannelModel channel)
     {

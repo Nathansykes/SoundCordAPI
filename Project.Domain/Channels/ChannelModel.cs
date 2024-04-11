@@ -1,7 +1,5 @@
 ﻿using Project.Generic;
 using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 
 namespace Project.Domain.Channels;
 

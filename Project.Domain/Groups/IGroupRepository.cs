@@ -1,7 +1,4 @@
-﻿using Project.Domain;
-using System.Text.RegularExpressions;
-
-namespace Project.Application.Groups;
+﻿namespace Project.Application.Groups;
 public interface IGroupRepository<TGroupEntity> where TGroupEntity : new()
 {
     void AddUserToGroup(Guid id, string userName);
