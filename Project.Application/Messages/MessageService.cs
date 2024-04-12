@@ -10,6 +10,7 @@ public class MessageService(IMessageRepository<Message> messageRepositor1y, IMod
 
     public MessageModel CreateMessage(Guid channelId, MessageModel message)
     {
+        message.ChannelId = channelId;
         var entity = _mapper.MapToDatabaseModel(message);
         _messageRepository.Create(channelId, entity);
         return _mapper.MapToDomainModel(entity);

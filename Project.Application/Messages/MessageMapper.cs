@@ -23,7 +23,10 @@ public class MessageMapper : IModelMapper<Message, MessageModel>
     {
         domainModel ??= new();
         domainModel.Id = databaseModel.Id;
+        domainModel.ChannelId = databaseModel.ChannelMessage!.ChannelId;
         domainModel.Content = databaseModel.Content;
+        domainModel.CreatedAt = databaseModel.Utc;
+        domainModel.User = databaseModel.User.UserName!;
         return domainModel;
     }
 }

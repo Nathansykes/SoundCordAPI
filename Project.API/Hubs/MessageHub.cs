@@ -1,29 +1,47 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Project.API.Hubs.Models;
 using Project.Domain.Channels;
 using Project.Domain.Messages;
+using Project.Infrastructure.Model.Entities;
 using SignalRSwaggerGen.Attributes;
 using System.Text.Json;
 
 namespace Project.API.Hubs;
 
-public class MessageHub(/*IChannelService channelService, IMessageService messageService*/) : Hub
+[Authorize]
+[SignalRHub]
+public class MessageHub(IChannelService channelService, IMessageService messageService) : Hub
 {
-    //private readonly IChannelService _channelService = channelService;
-    //private readonly IMessageService _messageService = messageService;
+    private readonly IChannelService _channelService = channelService;
+    private readonly IMessageService _messageService = messageService;
 
-    public override Task OnConnectedAsync()
+    public async Task Message(SendChannelMessageRequest request)
     {
-        return base.OnConnectedAsync();
+        if (!await ValidateChannelAccess(request.ChannelId))
+            return;
+        
+        var createdMessage = _messageService.CreateMessage(request.ChannelId, request.Message);
+        await Clients.Group(request.ChannelId.ToString()).SendAsync("Message", createdMessage);
     }
 
-    public override Task OnDisconnectedAsync(Exception? exception)
+    public async Task ConnectToChannel(ConnectToChannelRequest request)
     {
-        return base.OnDisconnectedAsync(exception);
+        if (!await ValidateChannelAccess(request.ChannelId))
+            return;
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, request.ChannelId.ToString());
+        await Clients.Caller.SendAsync("Connected", request.ChannelId);
     }
 
-    public async Task SendMessage(Guid channelId, MessageModel message)
+
+
+    private async Task<bool> ValidateChannelAccess(Guid channelId)
     {
-        message.ChannelId = channelId;
-        await Clients.All.SendAsync("message", message);
+        if (!_channelService.UserHasAccessToChannel(channelId))
+        {
+            await Clients.Caller.SendAsync("Error", "You do not have access to this channel");
+            return false;
+        }
+        return true;
     }
 }

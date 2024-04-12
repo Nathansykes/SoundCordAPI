@@ -23,7 +23,7 @@ public static class ApplicationExtensions
 
         app.MapControllers();
 
-        app.MapHub<MessageHub>("/messagehub");
+        app.MapHub<MessageHub>("/messageshub");
 
         return app;
     }

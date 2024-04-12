@@ -83,7 +83,7 @@ public static class ServicesExtensions
             var user = httpContext.HttpContext?.User;
             if (user is null || user.Identity?.Name is null || (!user.Identity.IsAuthenticated))
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Request is not authenticated, cannot access current user");
             }
 
             var userMgr = services.GetRequiredService<UserManager<ApplicationUser>>();

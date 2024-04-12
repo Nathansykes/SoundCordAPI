@@ -29,4 +29,9 @@ public class ChannelService(
         var entities = _channelRepository.GetByGroupId(groupId).ToList();
         return entities.Select(x => _mapper.MapToDomainModel(x)).ToList();
     }
+
+    public bool UserHasAccessToChannel(Guid channelId)
+    {
+        return _channelRepository.TryGetById(channelId, out _);
+    }
 }
