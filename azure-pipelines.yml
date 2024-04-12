@@ -1,4 +1,5 @@
 # ASP.NET
+
 # Build and test ASP.NET projects.
 # Add steps that publish symbols, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
@@ -32,3 +33,12 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'ProjectNathanSubscription(959513eb-0ef6-4b29-9c96-e5cd7e1b88c8)'
+    appType: 'webApp'
+    WebAppName: 'ProjectNathanAPI'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
