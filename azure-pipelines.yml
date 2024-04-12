@@ -43,4 +43,4 @@ steps:
     WebAppName: 'ProjectNathanAPI'
     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
     enableCustomDeployment: true
-    DeploymentType: 'webDeploy'
+    DeploymentType: 'zipDeploy'
