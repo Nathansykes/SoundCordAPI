@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Project.Generic;
@@ -89,4 +90,22 @@ public static class Extensions
     public static string GetBytesAsString(this byte[] value, Encoding encoding) => encoding.GetString(value);
     public static byte[] GetStringAsBytes(this string value) => value.GetStringAsBytes(Encoding.UTF8);
     public static byte[] GetStringAsBytes(this string value, Encoding encoding) => encoding.GetBytes(value);
+    public static string GetBytesAsHexString(this byte[] bytes, bool upperCase = true)
+    {
+        StringBuilder result = new StringBuilder(bytes.Length * 2);
+
+        for (int i = 0; i < bytes.Length; i++)
+            result.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
+
+        return result.ToString();
+    }
+    public static byte[] ComputeMD5Hash(this string value) => value.ComputeMD5Hash(Encoding.UTF8);
+    public static byte[] ComputeMD5Hash(this string value, Encoding encoding)
+    {
+        return value.GetStringAsBytes(encoding).ComputeMD5Hash();
+    }
+    public static byte[] ComputeMD5Hash(this byte[] bytes)
+    {
+        return MD5.HashData(bytes);
+    }
 }

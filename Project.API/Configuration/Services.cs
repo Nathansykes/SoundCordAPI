@@ -75,6 +75,8 @@ public static class ServicesExtensions
 
         services.ConfigureSignalR(config);
 
+        services.AddSingleton<FileUploadService>();
+
         return services;
     }
 

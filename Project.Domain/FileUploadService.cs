@@ -9,6 +9,7 @@ using Project.Generic;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Project.Domain;
 public class FileUploadService
@@ -24,10 +25,11 @@ public class FileUploadService
 
     public async Task<FileUploadResult> UploadFile(Guid directory, FileUploadRequest request)
     {
+        var t = _shareClient.Exists();
         var directoryClient = await GetOrCreateDirectory(directory);
 
-        var newFileName = request.CreateNewFileName();
-        var fileClient = directoryClient.GetFileClient(newFileName);
+        request.CreateNewFileName();
+        var fileClient = directoryClient.GetFileClient(request.FullNewFileName);
         
         var fileStream = request.File.GetContentAsStream();
 
@@ -37,9 +39,9 @@ public class FileUploadService
         var result = new FileUploadResult
         {
             File = request.File,
-            NewFileName = newFileName,
-            ContentHash = uploadResult.Value.ContentHash.GetBytesAsString()
-        };  
+            NewFileName = request.NewFileName,
+            ContentHash = uploadResult.Value.ContentHash.GetBytesAsHexString()
+        };
         return result;
     }
 
@@ -78,7 +80,9 @@ public class FileModel
 public class FileUploadRequest
 {
     public FileModel File { get; set; } = null!;
-    public string CreateNewFileName() => $"{Guid.NewGuid()}.{File.Extension}";
+    public string NewFileName { get; private set; } = null!;
+    public string FullNewFileName => $"{NewFileName}.{File.Extension}";
+    public string CreateNewFileName() => NewFileName = Guid.NewGuid().ToString();
 }
 
 public class FileUploadResult
