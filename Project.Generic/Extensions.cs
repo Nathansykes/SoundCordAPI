@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
 using System.Reflection;
+using System.Text;
 
 namespace Project.Generic;
 public static class Extensions
@@ -83,4 +84,9 @@ public static class Extensions
 
         return typeInfoList;
     }
+
+    public static string GetBytesAsString(this byte[] value) => value.GetBytesAsString(Encoding.UTF8);
+    public static string GetBytesAsString(this byte[] value, Encoding encoding) => encoding.GetString(value);
+    public static byte[] GetStringAsBytes(this string value) => value.GetStringAsBytes(Encoding.UTF8);
+    public static byte[] GetStringAsBytes(this string value, Encoding encoding) => encoding.GetBytes(value);
 }
