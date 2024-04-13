@@ -11,8 +11,10 @@ using Project.Auth;
 using Project.Auth.Identity.Models;
 using Project.Domain;
 using Project.Domain.Channels;
+using Project.Domain.Files;
 using Project.Domain.Groups;
 using Project.Domain.Messages;
+using Project.Domain.Songs;
 using Project.Generic;
 using Project.Infrastructure.Model;
 using Project.Infrastructure.Model.Entities;
@@ -20,7 +22,6 @@ using Project.Infrastructure.Repositories;
 using System.Reflection;
 
 namespace Project.API.Configuration;
-
 
 public static class ServicesExtensions
 {
@@ -122,6 +123,17 @@ public static class ServicesExtensions
     {
         services.AddScoped<IMessageService, MessageService>();
         services.AddScoped<IMessageRepository<Message>, MessageRepository>();
+        return services;
+    }
+    public static IServiceCollection AddSongs(this IServiceCollection services)
+    {
+        services.AddScoped<ISongRepository<Song>, SongRepository>();
+        services.AddScoped<ISongRevisionRepository<SongRevision>, SongRevisionRepository>();
+        return services;
+    }
+    public static IServiceCollection AddFiles(this IServiceCollection services)
+    {
+        services.AddScoped<IFileMetadataRepository<FileMetadatum>, FileMetadataRepository>();
         return services;
     }
 
