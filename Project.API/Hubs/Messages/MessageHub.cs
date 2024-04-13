@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Project.API.Hubs.Models;
 using Project.Domain.Channels;
 using Project.Domain.Messages;
 using Project.Infrastructure.Model.Entities;
 using SignalRSwaggerGen.Attributes;
 using System.Text.Json;
 
-namespace Project.API.Hubs;
+namespace Project.API.Hubs.Messages;
 
 [Authorize]
-[SignalRHub]
+[SignalRHub("/messageshub")]
 public class MessageHub(IChannelService channelService, IMessageService messageService) : Hub
 {
     private readonly IChannelService _channelService = channelService;
@@ -19,12 +18,12 @@ public class MessageHub(IChannelService channelService, IMessageService messageS
     {
         if (!await ValidateChannelAccess(request.ChannelId))
             return;
-        
+
         var createdMessage = _messageService.CreateMessage(request.ChannelId, request.Message);
         await Clients.Group(request.ChannelId.ToString()).SendAsync("Message", createdMessage);
     }
 
-    public async Task ConnectToChannel(ConnectToChannelRequest request)
+    public async Task ConnectToChannel(ChannelHubRequest request)
     {
         if (!await ValidateChannelAccess(request.ChannelId))
             return;
@@ -33,6 +32,11 @@ public class MessageHub(IChannelService channelService, IMessageService messageS
         await Clients.Caller.SendAsync("Connected", request.ChannelId);
     }
 
+    public async Task DisconnectFromChannel(ChannelHubRequest request)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.ChannelId.ToString());
+        await Clients.Caller.SendAsync("Disconnected", request.ChannelId);
+    }
 
 
     private async Task<bool> ValidateChannelAccess(Guid channelId)
@@ -44,4 +48,5 @@ public class MessageHub(IChannelService channelService, IMessageService messageS
         }
         return true;
     }
+
 }

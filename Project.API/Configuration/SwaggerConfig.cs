@@ -30,10 +30,7 @@ public static class SwaggerConfig
                 Scheme = "Bearer",
             });
             options.DocumentFilter<SwaggerAuthorizationFilter>();
-            options.AddSignalRSwaggerGen(o =>
-            {
-                o.ScanAssembly(Assembly.GetAssembly(typeof(BaseHub)));
-            });
+            options.AddSignalRSwaggerGen();
         });
         return services;
     }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Logging.AzureAppServices;
+using Project.API.Hubs.Messages;
 using Project.Application.Channels;
 using Project.Application.Groups;
 using Project.Application.Messages;
@@ -70,10 +72,11 @@ public static class ServicesExtensions
         services.AddScoped<AuthorizationExtensions>();
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        services.AddSignalR();
+        services.ConfigureSignalR(config);
 
         return services;
     }
+
 
     public static IServiceCollection AddDomain(this IServiceCollection services)
     {
@@ -133,6 +136,16 @@ public static class ServicesExtensions
             options.UseLazyLoadingProxies()
                    .UseSqlServer(config.GetConnectionString("Database")));
 
+        return services;
+    }
+
+
+    public static IServiceCollection ConfigureSignalR(this IServiceCollection services, IConfiguration config)
+    {
+        services.AddSignalR().AddHubOptions<MessageHub>(options =>
+        {
+
+        });
         return services;
     }
 

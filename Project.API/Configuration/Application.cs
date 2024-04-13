@@ -1,5 +1,5 @@
 ﻿using Project.API.Authorization;
-using Project.API.Hubs;
+using Project.API.Hubs.Messages;
 
 namespace Project.API.Configuration;
 
