@@ -15,7 +15,6 @@ public interface IApplicationDbContext : IDisposable
     DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
     DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
     DbSet<Channel> Channels { get; set; }
-    DbSet<ChannelMessage> ChannelMessages { get; set; }
     DbSet<FileMetadatum> FileMetadata { get; set; }
     DbSet<Group> Groups { get; set; }
     DbSet<Message> Messages { get; set; }

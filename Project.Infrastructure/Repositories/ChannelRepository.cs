@@ -23,8 +23,8 @@ public class ChannelRepository(IUserApplicationDbContext context) : IChannelRepo
 
     public bool TryGetById(Guid id, out Channel? entity)
     {
-        entity = _context.Channels.FirstOrDefault(x => x.Id == id);
-        if (entity is null || (!entity.Group.Users.Any(x => x.Id == _context.ContextUser.Id)))
+        entity = GetAll().FirstOrDefault(x => x.Id == id);
+        if (entity is null)
         {
             entity = null;
             return false;
@@ -45,7 +45,7 @@ public class ChannelRepository(IUserApplicationDbContext context) : IChannelRepo
 
     public void DeleteById(Guid id)
     {
-        var entity = _context.Groups.FirstOrDefault(x => x.Id == id && x.CreatedByUserId == _context.ContextUser.Id)?.Channels.FirstOrDefault(x => x.Id == id)
+        var entity = GetAll().FirstOrDefault(x => x.Group.CreatedByUserId == _context.ContextUser.Id)
             ?? throw new NotFoundException($"Could not delete group {id} because it does not exists or the user did not create it");
         _context.Channels.Remove(entity);
         _context.SaveChanges();

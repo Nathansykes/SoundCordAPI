@@ -38,7 +38,7 @@ public class GroupRepository(IUserApplicationDbContext context) : IGroupReposito
 
     public bool TryGetById(Guid id, out Group? entity)
     {
-        entity = _context.ContextUser.Groups.FirstOrDefault(x => x.Id == id);
+        entity = GetAll().FirstOrDefault(x => x.Id == id);
         return entity is not null;
     }
 

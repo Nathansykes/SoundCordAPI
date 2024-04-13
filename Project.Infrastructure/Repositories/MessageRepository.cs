@@ -17,11 +17,7 @@ public class MessageRepository(
         var channel = _channelRepository.GetById(channelId);
 
         entity.UserId = _context.ContextUser.Id;
-        _context.Messages.Add(entity);
-        channel.ChannelMessages.Add(new ChannelMessage
-        {
-            Message = entity
-        });
+        channel.Messages.Add(entity);
         _context.SaveChanges();
         return entity;
     }
@@ -36,7 +32,7 @@ public class MessageRepository(
 
     public IQueryable<Message> GetByChannelId(Guid channelId)
     {
-        return _context.ChannelMessages.Where(x => x.ChannelId == channelId).Select(x => x.Message);
+        return _context.Messages.Where(x => x.ChannelId == channelId);
     }
 
     public Message GetById(Guid id)
@@ -47,7 +43,7 @@ public class MessageRepository(
     public bool TryGetById(Guid id, out Message? entity)
     {
         entity = _context.Messages.FirstOrDefault(x => x.Id == id);
-        if (entity is null || entity.ChannelMessage?.Channel.Group.Users.Any(y => y.Id == _context.ContextUser.Id) == false)
+        if (entity is null || entity.Channel.Group.Users.Any(y => y.Id == _context.ContextUser.Id) == false)
         {
             entity = null;
             return false;
