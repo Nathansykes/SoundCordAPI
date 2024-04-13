@@ -5,8 +5,11 @@ using Azure.Storage.Files.Shares.Specialized;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
+using Project.Domain.Exceptions;
 using Project.Generic;
+using Swashbuckle.AspNetCore.Annotations;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -23,29 +26,45 @@ public class FileUploadService
         _shareClient = new ShareClient(_configuration.GetConnectionString("Azure:StorageAccount")!, _configuration.GetConnectionString("Azure:ShareName")!);
     }
 
-    public async Task<FileUploadResult> UploadFile(Guid directory, FileUploadRequest request)
+    public async Task<IFileModel> UploadFile(Guid directory, FileUploadModel file)
     {
-        var t = _shareClient.Exists();
         var directoryClient = await GetOrCreateDirectory(directory);
 
-        request.CreateNewFileName();
-        var fileClient = directoryClient.GetFileClient(request.FullNewFileName);
+        file.CreateNewFileName();
+        var fileClient = directoryClient.GetFileClient(file.NewFileName);
         
-        var fileStream = request.File.GetContentAsStream();
+        var fileStream = file.GetContentAsStream();
 
         await fileClient.CreateAsync(fileStream.Length);
         var uploadResult = await fileClient.UploadAsync(fileStream);
 
-        var result = new FileUploadResult
-        {
-            File = request.File,
-            NewFileName = request.NewFileName,
-            ContentHash = uploadResult.Value.ContentHash.GetBytesAsHexString()
-        };
-        return result;
+        file.ContentHash = uploadResult.Value.ContentHash.GetBytesAsHexString();
+
+        return file;
     }
 
-    public async Task<ShareDirectoryClient> GetOrCreateDirectory(Guid directory)
+    public async Task<IFileModel> DownloadFile(Guid directory, FileDownloadRequest request)
+    {
+        var directoryClient =  await GetDirectory(directory);
+        var fileClient = directoryClient.GetFileClient(request.FullNewFileName());
+        if(!await fileClient.ExistsAsync())
+        {
+            throw new DomainFileNotFoundException($"File '{request.FullNewFileName()}' not found");
+        }
+        var downloadResult = await fileClient.DownloadAsync();
+        
+        var file = new FileDownloadModel
+        {
+            OriginalFileName = request.OriginalFileName,
+            NewFileName = request.NewFileName,
+            Extension = request.Extension,
+        };
+        file.SetContentFromStream(downloadResult.Value.Content);
+
+        return file;
+    }
+
+    private async Task<ShareDirectoryClient> GetOrCreateDirectory(Guid directory)
     {
         ShareDirectoryClient directoryClient = _shareClient.GetDirectoryClient(directory.ToString());
         if (!await directoryClient.ExistsAsync())
@@ -54,16 +73,67 @@ public class FileUploadService
         }
         return directoryClient;
     }
+    private async Task<ShareDirectoryClient> GetDirectory(Guid directory)
+    {
+        ShareDirectoryClient directoryClient = _shareClient.GetDirectoryClient(directory.ToString());
+        if (!await directoryClient.ExistsAsync())
+        {
+            throw new InvalidOperationException($"Directory '{directory}' not found");
+        }
+        return directoryClient;
+    }
 }
 
-public class FileModel
+public static class FileExtensions
 {
-    public string FileName { get; set; } = null!;
+    public static MemoryStream? GetContentAsStream(this IFileModel file)
+    {
+        var bytes = file.GetContentAsByteArray();
+        return bytes is null ? null : new(bytes);
+    }
+    public static byte[]? GetContentAsByteArray(this IFileModel file) => file.Content?.GetStringAsBytes();
+
+    public static string FullNewFileName(this IFileInfo info) => $"{info.NewFileName}.{info.Extension}";
+    public static string FullOriginalFileName(this IFileInfo info) => $"{info.OriginalFileName}.{info.Extension}";
+}
+
+public interface IFileInfo
+{
+    string OriginalFileName { get; }
+    string? NewFileName { get; }
+    string Extension { get; }
+}
+public interface IFileModel : IFileInfo
+{
+    string? Content { get; }
+    string? ContentHash { get; }
+}
+
+public class FileUploadModel : IFileModel
+{
+    public string OriginalFileName { get; set; } = null!;
+    public string NewFileName { get; private set; } = null!;
     public string Extension { get; set; } = null!;
+    public string? Content { get; set; }
+    public string? ContentHash { get; set; }
+
+    public void CreateNewFileName() => NewFileName = Guid.NewGuid().ToString();
+}
+
+public class FileDownloadRequest : IFileInfo
+{
+    public string NewFileName { get; set; } = null!;
+    public string OriginalFileName { get; set; } = null!;
+    public string Extension { get; set; } = null!;
+}
+
+public class FileDownloadModel : IFileModel
+{
+    public string OriginalFileName { get; set; } = null!;
+    public string NewFileName { get; init; } = null!;
+    public string Extension { get; init; } = null!;
     public string Content { get; set; } = null!;
-    public Stream GetContentAsStream() => new MemoryStream(GetContentAsByteArray());
-    public byte[] GetContentAsByteArray() => Content.GetStringAsBytes();
-    public string FullFileName => $"{FileName}.{Extension}";
+    public string? ContentHash { get; set; }
 
     public void SetContentFromStream(Stream stream)
     {
@@ -75,21 +145,4 @@ public class FileModel
     {
         Content = bytes.GetBytesAsString();
     }
-}
-
-public class FileUploadRequest
-{
-    public FileModel File { get; set; } = null!;
-    public string NewFileName { get; private set; } = null!;
-    public string FullNewFileName => $"{NewFileName}.{File.Extension}";
-    public string CreateNewFileName() => NewFileName = Guid.NewGuid().ToString();
-}
-
-public class FileUploadResult
-{
-    public FileModel File { get; set; } = null!;
-    public string NewFileName { get; set; } = null!;
-    public string ContentHash { get; set; } = null!;
-    public string Extension => File.Extension;
-    public string FullNewFileName => $"{NewFileName}.{Extension}";
 }

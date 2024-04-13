@@ -63,3 +63,12 @@ public class NotFoundException : DomainException
     public NotFoundException(string message, Exception innerException)
         : base(message, 404, innerException) { }
 }
+
+public class DomainFileNotFoundException : NotFoundException
+{
+    public DomainFileNotFoundException(string message)
+        : base(message) { }
+
+    public DomainFileNotFoundException(string message, Exception innerException)
+        : base(message, innerException) { }
+}
