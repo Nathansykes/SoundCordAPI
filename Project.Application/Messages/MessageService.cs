@@ -24,7 +24,7 @@ public class MessageService(IMessageRepository<Message> messageRepositor1y, IMod
 
     public ICollection<MessageModel> GetMessages(Guid channelId)
     {
-        var entities = _messageRepository.GetByChannelId(channelId).ToList();
+        var entities = _messageRepository.GetByChannelId(channelId).OrderByDescending(x => x.Utc).ToList();
         return entities.Select(x => _mapper.MapToDomainModel(x)).ToList();
     }
 }
