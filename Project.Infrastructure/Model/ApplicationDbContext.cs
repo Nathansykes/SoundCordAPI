@@ -24,8 +24,6 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Channel> Channels { get; set; }
 
-    public virtual DbSet<ChannelMessage> ChannelMessages { get; set; }
-
     public virtual DbSet<FileMetadatum> FileMetadata { get; set; }
 
     public virtual DbSet<Group> Groups { get; set; }
@@ -138,27 +136,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("FK_Channel_GroupId");
         });
 
-        modelBuilder.Entity<ChannelMessage>(entity =>
-        {
-            entity.HasKey(e => e.MessageId).HasName("PK_ChannelMessage");
-
-            entity.Property(e => e.MessageId).ValueGeneratedNever();
-
-            entity.HasOne(d => d.Channel).WithMany(p => p.ChannelMessages)
-                .HasForeignKey(d => d.ChannelId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ChannelMessage_ChannelId");
-
-            entity.HasOne(d => d.Message).WithOne(p => p.ChannelMessage)
-                .HasForeignKey<ChannelMessage>(d => d.MessageId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ChannelMessage_MessageId");
-
-            entity.HasOne(d => d.SongRevision).WithMany(p => p.ChannelMessages)
-                .HasForeignKey(d => d.SongRevisionId)
-                .HasConstraintName("FK_ChannelMessage_SongRevisionId");
-        });
-
         modelBuilder.Entity<FileMetadatum>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
@@ -214,6 +191,15 @@ public partial class ApplicationDbContext : DbContext
                 .HasDefaultValueSql("(getutcdate())")
                 .HasColumnType("datetime");
 
+            entity.HasOne(d => d.Channel).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.ChannelId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Message_ChannelId");
+
+            entity.HasOne(d => d.SongRevision).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.SongRevisionId)
+                .HasConstraintName("FK_Message_SongRevisionId");
+
             entity.HasOne(d => d.User).WithMany(p => p.Messages)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -254,6 +240,12 @@ public partial class ApplicationDbContext : DbContext
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
             entity.Property(e => e.CreatedByUserId).HasMaxLength(450);
+            entity.Property(e => e.CreatedUtc)
+                .HasDefaultValueSql("(getutcdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.RevisionName)
+                .HasMaxLength(200)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.CreatedByUser).WithMany(p => p.SongRevisions)
                 .HasForeignKey(d => d.CreatedByUserId)

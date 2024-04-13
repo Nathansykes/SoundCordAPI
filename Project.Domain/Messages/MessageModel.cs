@@ -18,4 +18,8 @@ public class MessageModel
 
     [SwaggerSchema(ReadOnly = true)]
     public DateTime CreatedAt { get; set; }
+
+
+    public Guid? SongRevisionId { get; set; }
+    public int? SongTimestampMilliseconds { get; set; }
 }

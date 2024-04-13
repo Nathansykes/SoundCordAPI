@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Project.Domain.Channels;
 using Project.Domain.Messages;
-using Project.Infrastructure.Model.Entities;
 using SignalRSwaggerGen.Attributes;
-using System.Text.Json;
 
 namespace Project.API.Hubs.Messages;
 

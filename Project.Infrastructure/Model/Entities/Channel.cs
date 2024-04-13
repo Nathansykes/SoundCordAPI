@@ -8,9 +8,9 @@ public partial class Channel
 
     public string ChannelName { get; set; } = null!;
 
-    public virtual ICollection<ChannelMessage> ChannelMessages { get; set; } = new List<ChannelMessage>();
-
     public virtual Group Group { get; set; } = null!;
+
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
 
     public virtual Song? Song { get; set; }
 }
