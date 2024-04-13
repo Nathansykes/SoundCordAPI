@@ -68,6 +68,6 @@ public class GlobalExceptionHandler(
     }
     private void LogException(Exception exception, HttpContext httpContext)
     {
-        _logger.LogError(exception, "An exception of type {ExceptionTypeName} occurred HttpRequest TraceIdentifier: {TraceIdentifier}", exception.GetType().Name, httpContext.TraceIdentifier);
+        _logger.LogError(exception, "An exception of type {ExceptionTypeName} occurred. HttpRequest TraceIdentifier: {TraceIdentifier}", exception.GetType().Name, httpContext.TraceIdentifier);
     }
 }
