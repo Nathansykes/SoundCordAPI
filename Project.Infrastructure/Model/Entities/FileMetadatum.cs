@@ -14,9 +14,11 @@ public partial class FileMetadatum
 
     public string NewFileName { get; set; } = null!;
 
-    public string? Directory { get; set; }
+    public string ContentHash { get; set; } = null!;
 
-    public string? FileShare { get; set; }
+    public Guid Directory { get; set; }
+
+    public string FileShare { get; set; } = null!;
 
     public virtual ICollection<SongRevision> SongRevisions { get; set; } = new List<SongRevision>();
 

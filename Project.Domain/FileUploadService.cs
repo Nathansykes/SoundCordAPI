@@ -1,18 +1,7 @@
-﻿using Azure;
-using Azure.Storage.Files.Shares;
-using Azure.Storage.Files.Shares.Models;
-using Azure.Storage.Files.Shares.Specialized;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Azure.Storage.Files.Shares;
 using Microsoft.Extensions.Configuration;
 using Project.Domain.Exceptions;
 using Project.Generic;
-using Swashbuckle.AspNetCore.Annotations;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json.Serialization;
 
 namespace Project.Domain;
 public class FileUploadService
@@ -28,12 +17,16 @@ public class FileUploadService
 
     public async Task<IFileModel> UploadFile(Guid directory, FileUploadModel file)
     {
+        if (file.Content is null)
+        {
+            throw new ValidationException("File content is required");
+        }
         var directoryClient = await GetOrCreateDirectory(directory);
 
         file.CreateNewFileName();
         var fileClient = directoryClient.GetFileClient(file.NewFileName);
-        
-        var fileStream = file.GetContentAsStream();
+
+        var fileStream = file.GetContentAsStream()!;
 
         await fileClient.CreateAsync(fileStream.Length);
         var uploadResult = await fileClient.UploadAsync(fileStream);
@@ -45,14 +38,14 @@ public class FileUploadService
 
     public async Task<IFileModel> DownloadFile(Guid directory, FileDownloadRequest request)
     {
-        var directoryClient =  await GetDirectory(directory);
+        var directoryClient = await GetDirectory(directory);
         var fileClient = directoryClient.GetFileClient(request.FullNewFileName());
-        if(!await fileClient.ExistsAsync())
+        if (!await fileClient.ExistsAsync())
         {
             throw new DomainFileNotFoundException($"File '{request.FullNewFileName()}' not found");
         }
         var downloadResult = await fileClient.DownloadAsync();
-        
+
         var file = new FileDownloadModel
         {
             OriginalFileName = request.OriginalFileName,

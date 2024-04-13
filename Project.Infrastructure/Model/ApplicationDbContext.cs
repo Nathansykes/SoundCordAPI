@@ -126,9 +126,7 @@ public partial class ApplicationDbContext : DbContext
             entity.HasIndex(e => new { e.GroupId, e.ChannelName }, "UQ_Channel_GroupId_ChannelName").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
-            entity.Property(e => e.ChannelName)
-                .HasMaxLength(200)
-                .IsUnicode(false);
+            entity.Property(e => e.ChannelName).HasMaxLength(200);
 
             entity.HasOne(d => d.Group).WithMany(p => p.Channels)
                 .HasForeignKey(d => d.GroupId)
@@ -139,21 +137,13 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.Entity<FileMetadatum>(entity =>
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
-            entity.Property(e => e.Directory)
-                .HasMaxLength(200)
-                .IsUnicode(false);
-            entity.Property(e => e.FileShare)
-                .HasMaxLength(200)
-                .IsUnicode(false);
-            entity.Property(e => e.NewFileName)
-                .HasMaxLength(200)
-                .IsUnicode(false);
+            entity.Property(e => e.ContentHash).HasMaxLength(3000);
+            entity.Property(e => e.FileShare).HasMaxLength(200);
+            entity.Property(e => e.NewFileName).HasMaxLength(200);
             entity.Property(e => e.OriginalExtension)
                 .HasMaxLength(15)
                 .IsUnicode(false);
-            entity.Property(e => e.OriginalFileName)
-                .HasMaxLength(200)
-                .IsUnicode(false);
+            entity.Property(e => e.OriginalFileName).HasMaxLength(200);
             entity.Property(e => e.UploadedByUserId).HasMaxLength(450);
             entity.Property(e => e.UploadedUtc)
                 .HasDefaultValueSql("(getutcdate())")
@@ -171,9 +161,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
             entity.Property(e => e.CreatedByUserId).HasMaxLength(450);
-            entity.Property(e => e.GroupName)
-                .HasMaxLength(100)
-                .IsUnicode(false);
+            entity.Property(e => e.GroupName).HasMaxLength(100);
 
             entity.HasOne(d => d.CreatedByUser).WithMany(p => p.Groups)
                 .HasForeignKey(d => d.CreatedByUserId)
@@ -214,9 +202,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
             entity.Property(e => e.CreatedByUserId).HasMaxLength(450);
-            entity.Property(e => e.SongName)
-                .HasMaxLength(200)
-                .IsUnicode(false);
+            entity.Property(e => e.SongName).HasMaxLength(200);
 
             entity.HasOne(d => d.Channel).WithOne(p => p.Song)
                 .HasForeignKey<Song>(d => d.ChannelId)
@@ -243,9 +229,7 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.CreatedUtc)
                 .HasDefaultValueSql("(getutcdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.RevisionName)
-                .HasMaxLength(200)
-                .IsUnicode(false);
+            entity.Property(e => e.RevisionName).HasMaxLength(200);
 
             entity.HasOne(d => d.CreatedByUser).WithMany(p => p.SongRevisions)
                 .HasForeignKey(d => d.CreatedByUserId)
