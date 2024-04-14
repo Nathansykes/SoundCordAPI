@@ -42,7 +42,7 @@ public class FileUploadService : IFileUploadService
         var fileClient = directoryClient.GetFileClient(request.FullNewFileName());
         if (!await fileClient.ExistsAsync())
         {
-            throw new DomainFileNotFoundException($"File '{request.FullNewFileName()}' not found");
+            throw new DomainFileNotFoundException($"File '{request.FullOriginalFileName()}' not found");
         }
         var downloadResult = await fileClient.DownloadAsync();
 

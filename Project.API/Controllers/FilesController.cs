@@ -6,9 +6,9 @@ using Project.Infrastructure.Model.Entities;
 namespace Project.API.Controllers;
 
 [Route("api/[controller]")]
-public class FilesController(FileUploadService fileUploadService, IFileMetadataRepository<FileMetadatum> fileMetadataRepository) : BaseController
+public class FilesController(IFileUploadService fileUploadService, IFileMetadataRepository<FileMetadatum> fileMetadataRepository) : BaseController
 {
-    private readonly FileUploadService _fileUploadService = fileUploadService;
+    private readonly IFileUploadService _fileUploadService = fileUploadService;
     private readonly IFileMetadataRepository<FileMetadatum> _fileMetadataRepository = fileMetadataRepository;
 
     //[HttpPost("Upload")]
@@ -18,7 +18,7 @@ public class FilesController(FileUploadService fileUploadService, IFileMetadataR
     //    var result = await _fileUploadService.UploadFile([directory], model);
     //    return Ok(result);
     //}
-    [HttpPost("Download{fileId}")]
+    [HttpPost("Download/{fileId}")]
     public async Task<IActionResult> DownloadFile(Guid fileId)
     {
         var file = _fileMetadataRepository.GetById(fileId);
@@ -32,6 +32,15 @@ public class FilesController(FileUploadService fileUploadService, IFileMetadataR
         };
 
         var result = await _fileUploadService.DownloadFile(directories, request);
-        return Ok(result);
+        var dl = new FileModel()
+        {
+            Content = result.Content!,
+            FileName = file.OriginalFileName,
+            Extension = file.OriginalExtension,
+            UploadedByUser = file.UploadedByUser.UserName!,
+            ContentLength = file.ContentLengthBytes,
+            ContentType = file.ContentType,
+        };
+        return Ok(dl);
     }
 }
