@@ -16,7 +16,11 @@ public partial class FileMetadatum
 
     public string ContentHash { get; set; } = null!;
 
-    public Guid Directory { get; set; }
+    public string? ContentType { get; set; }
+
+    public int ContentLengthBytes { get; set; }
+
+    public string Directory { get; set; } = null!;
 
     public string FileShare { get; set; } = null!;
 

@@ -1,16 +1,23 @@
-﻿using Project.Domain.Exceptions;
+﻿using Project.Domain;
+using Project.Domain.Exceptions;
 using Project.Domain.Songs;
 using Project.Infrastructure.Model;
 using Project.Infrastructure.Model.Entities;
 
 namespace Project.Infrastructure.Repositories;
-public class SongRevisionRepository(IUserApplicationDbContext context, ISongRepository<Song> songRepository) : ISongRevisionRepository<SongRevision>
+public class SongRevisionRepository(
+    IUserApplicationDbContext context,
+    ISongRepository<Song> songRepository,
+    IUserAccessValidator userAccessValidator) : ISongRevisionRepository<SongRevision>
 {
     private readonly IUserApplicationDbContext _context = context;
     private readonly ISongRepository<Song> _songRepository = songRepository;
+    private readonly IUserAccessValidator _userAccessValidator = userAccessValidator;
 
     public SongRevision Create(SongRevision entity)
     {
+        if (!_userAccessValidator.HasAccessToSong(entity.SongId))
+            throw new DataAccessException("User does not have access to song");
         _context.SongRevisions.Add(entity);
         _context.SaveChanges();
         return entity;

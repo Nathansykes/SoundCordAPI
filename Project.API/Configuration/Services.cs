@@ -7,11 +7,13 @@ using Project.API.Hubs.Messages;
 using Project.Application.Channels;
 using Project.Application.Groups;
 using Project.Application.Messages;
+using Project.Application.Songs;
 using Project.Auth;
 using Project.Auth.Identity.Models;
 using Project.Domain;
 using Project.Domain.Channels;
 using Project.Domain.Files;
+using Project.Domain.Files.FileUploading;
 using Project.Domain.Groups;
 using Project.Domain.Messages;
 using Project.Domain.Songs;
@@ -106,6 +108,8 @@ public static class ServicesExtensions
         services.AddGroups();
         services.AddChannels();
         services.AddMessages();
+        services.AddSongs();
+        services.AddFiles();
         return services;
     }
 
@@ -129,7 +133,9 @@ public static class ServicesExtensions
     }
     public static IServiceCollection AddSongs(this IServiceCollection services)
     {
+        services.AddScoped<ISongService, SongService>();
         services.AddScoped<ISongRepository<Song>, SongRepository>();
+        services.AddScoped<ISongRevisionService, SongRevisionService>();
         services.AddScoped<ISongRevisionRepository<SongRevision>, SongRevisionRepository>();
         return services;
     }

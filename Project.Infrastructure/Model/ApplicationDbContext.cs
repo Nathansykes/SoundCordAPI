@@ -138,6 +138,8 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.Property(e => e.Id).HasDefaultValueSql("(newsequentialid())");
             entity.Property(e => e.ContentHash).HasMaxLength(3000);
+            entity.Property(e => e.ContentType).HasMaxLength(200);
+            entity.Property(e => e.Directory).HasMaxLength(300);
             entity.Property(e => e.FileShare).HasMaxLength(200);
             entity.Property(e => e.NewFileName).HasMaxLength(200);
             entity.Property(e => e.OriginalExtension)

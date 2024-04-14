@@ -56,6 +56,14 @@ public class ValidationException : DomainException
         : base(message, 400, innerException) { }
 }
 
+public class DataAccessException : DomainException
+{
+    public DataAccessException(string message)
+        : base(message, 403) { }
+    public DataAccessException(string message, Exception innerException)
+        : base(message, 403, innerException) { }
+}
+
 public class NotFoundException : DomainException
 {
     public NotFoundException(string message)
