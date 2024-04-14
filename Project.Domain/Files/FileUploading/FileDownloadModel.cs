@@ -18,6 +18,6 @@ public class FileDownloadModel : IFileModel
     }
     public void SetContentFromByteArray(byte[] bytes)
     {
-        Content = bytes.GetBytesAsString();
+        Content = bytes.GetBytesAsBase64String();
     }
 }

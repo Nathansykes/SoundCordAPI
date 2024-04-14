@@ -9,7 +9,7 @@ public static class FileExtensions
         var bytes = file.GetContentAsByteArray();
         return bytes is null ? null : new(bytes);
     }
-    public static byte[]? GetContentAsByteArray(this IFileModel file) => file.Content?.GetBase64StringAsBytes();
+    public static byte[]? GetContentAsByteArray(this IFileModel file) => file.Content?.GetStringAsBytes();
 
     public static string FullNewFileName(this IFileInfo info) => $"{info.NewFileName}.{info.Extension}";
     public static string FullOriginalFileName(this IFileInfo info) => $"{info.OriginalFileName}.{info.Extension}";
