@@ -25,13 +25,14 @@ public class SongRevisionService(
 
     public async Task<SongRevisionModel> CreateSongRevision(Guid songId, CreateSongRevisionRequest request)
     {
+        request.SongRevision.SongId = songId;
         var songRevisionEntity = _mapper.MapToDatabaseModel(request.SongRevision);
         var songEntity = _songRepository.GetById(songId);
 
         var fileUploadModel = new FileUploadModel()
         {
             Content = request.File.Content,
-            Extension = request.File.ContentType,
+            Extension = request.File.Extension,
             OriginalFileName = request.File.FileName,
         };
         Guid[] directories = [songEntity.ChannelId, songId];
@@ -50,7 +51,7 @@ public class SongRevisionService(
 
         var fileEntity = _fileMetadataRepository.Create(fileMetadata);
 
-        songRevisionEntity.SongId = songId;
+
         songRevisionEntity.FileMetaDataId = fileEntity.Id;
         songRevisionEntity = _songRevisionRepository.Create(songRevisionEntity);
         return _mapper.MapToDomainModel(songRevisionEntity);

@@ -32,7 +32,7 @@ public class SongRepository(IUserApplicationDbContext context, IChannelRepositor
 
     public IQueryable<Song> GetByGroupId(Guid groupId)
     {
-        return _context.Songs.Where(s => s.GroupId == groupId);
+        return _context.Songs.Where(s => s.Channel.GroupId == groupId);
     }
 
     public Song GetById(Guid id)

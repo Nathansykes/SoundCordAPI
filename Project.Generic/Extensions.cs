@@ -90,6 +90,7 @@ public static class Extensions
     public static string GetBytesAsString(this byte[] value, Encoding encoding) => encoding.GetString(value);
     public static byte[] GetStringAsBytes(this string value) => value.GetStringAsBytes(Encoding.UTF8);
     public static byte[] GetStringAsBytes(this string value, Encoding encoding) => encoding.GetBytes(value);
+    public static byte[] GetBase64StringAsBytes(this string value) => Convert.FromBase64String(value);
     public static string GetBytesAsHexString(this byte[] bytes, bool upperCase = true)
     {
         StringBuilder result = new StringBuilder(bytes.Length * 2);
@@ -100,6 +101,7 @@ public static class Extensions
         return result.ToString();
     }
     public static byte[] ComputeMD5Hash(this string value) => value.ComputeMD5Hash(Encoding.UTF8);
+    public static byte[] ComputeMD5HashFromBase64String(this string value) => value.GetBase64StringAsBytes().ComputeMD5Hash();
     public static byte[] ComputeMD5Hash(this string value, Encoding encoding)
     {
         return value.GetStringAsBytes(encoding).ComputeMD5Hash();

@@ -77,7 +77,6 @@ public static class ServicesExtensions
 
         services.ConfigureSignalR(config);
 
-        services.AddSingleton<FileUploadService>();
 
         return services;
     }
@@ -102,7 +101,7 @@ public static class ServicesExtensions
             };
             return new CurrentUserAccessor(appUser);
         });
-
+        services.AddScoped<IUserAccessValidator, UserAccessValidator>();
         services.AddClassesAsImplementedInterface(_applicationAssemblies, typeof(IModelMapper<,>));
 
         services.AddGroups();
@@ -141,6 +140,7 @@ public static class ServicesExtensions
     }
     public static IServiceCollection AddFiles(this IServiceCollection services)
     {
+        services.AddSingleton<IFileUploadService, FileUploadService>();
         services.AddScoped<IFileMetadataRepository<FileMetadatum>, FileMetadataRepository>();
         return services;
     }

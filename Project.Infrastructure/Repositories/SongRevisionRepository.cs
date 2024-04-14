@@ -18,6 +18,7 @@ public class SongRevisionRepository(
     {
         if (!_userAccessValidator.HasAccessToSong(entity.SongId))
             throw new DataAccessException("User does not have access to song");
+        entity.CreatedByUserId = _context.ContextUser.Id;
         _context.SongRevisions.Add(entity);
         _context.SaveChanges();
         return entity;

@@ -27,7 +27,7 @@ public class GroupRepository(IUserApplicationDbContext context) : IGroupReposito
 
     public IQueryable<Group> GetAll()
     {
-        return _context.Groups.Where(x => x.Users.Any(y => y.Id == _context.ContextUser.Id));
+        return _context.Groups.Where(x => x.Users.Any(y => y.Id == _context.ContextUser.Id) || x.CreatedByUserId == _context.ContextUser.Id);
     }
 
     public Group GetById(Guid id)

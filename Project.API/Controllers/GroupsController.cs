@@ -32,10 +32,10 @@ public class GroupsController(IGroupService groupService) : BaseController
         return Ok(createdGroup);
     }
 
-    [HttpPost("{groupId}/users/{userId}")]
-    public IActionResult AddUserToGroup(Guid groupId, string userId)
+    [HttpPost("{groupId}/users/{userName}")]
+    public IActionResult AddUserToGroup(Guid groupId, string userName)
     {
-        _groupService.AddUserToGroup(groupId, userId);
+        _groupService.AddUserToGroup(groupId, userName);
         return Ok();
     }
 

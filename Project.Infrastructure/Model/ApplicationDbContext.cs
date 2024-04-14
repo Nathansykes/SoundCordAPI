@@ -215,11 +215,6 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.CreatedByUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Song_CreatedByUserId");
-
-            entity.HasOne(d => d.Group).WithMany(p => p.Songs)
-                .HasForeignKey(d => d.GroupId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Song_GroupId");
         });
 
         modelBuilder.Entity<SongRevision>(entity =>

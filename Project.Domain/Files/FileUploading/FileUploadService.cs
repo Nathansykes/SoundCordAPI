@@ -24,9 +24,9 @@ public class FileUploadService : IFileUploadService
         var directoryClient = await GetOrCreateDirectory(directories);
 
         file.CreateNewFileName();
-        var fileClient = directoryClient.GetFileClient(file.NewFileName);
+        var fileClient = directoryClient.GetFileClient(file.FullNewFileName());
 
-        var fileStream = file.GetContentAsStream()!;
+        using var fileStream = file.GetContentAsStream()!;
 
         await fileClient.CreateAsync(fileStream.Length);
         var uploadResult = await fileClient.UploadAsync(fileStream);

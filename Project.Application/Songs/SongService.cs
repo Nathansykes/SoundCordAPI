@@ -33,6 +33,11 @@ public class SongService(
         var entities = _songRepository.GetAll().ToList();
         return entities.Select(s => _mapper.MapToDomainModel(s)).ToList();
     }
+    public List<SongModel> GetAllSongsForGroup(Guid groupId)
+    {
+        var entities = _songRepository.GetByGroupId(groupId).ToList();
+        return entities.Select(s => _mapper.MapToDomainModel(s)).ToList();
+    }
 
     public SongModel CreateSong(Guid groupId, SongModel song)
     {

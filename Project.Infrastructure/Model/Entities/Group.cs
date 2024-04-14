@@ -12,7 +12,5 @@ public partial class Group
 
     public virtual AspNetUser CreatedByUser { get; set; } = null!;
 
-    public virtual ICollection<Song> Songs { get; set; } = new List<Song>();
-
     public virtual ICollection<AspNetUser> Users { get; set; } = new List<AspNetUser>();
 }

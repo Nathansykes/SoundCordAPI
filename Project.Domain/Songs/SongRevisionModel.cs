@@ -7,8 +7,13 @@ public class SongRevisionModel
     public Guid Id { get; set; }
     public string? RevisionName { get; set; }
 
+    [SwaggerSchema(ReadOnly = true)]
     public Guid SongId { get; set; }
 
     [SwaggerSchema(ReadOnly = true)]
-    public string CreateByUser { get; set; } = "";
+    public string CreatedByUser { get; set; } = "";
+    [SwaggerSchema(ReadOnly = true)]
+    public Guid? FileMetadataId { get; set; }
+    [SwaggerSchema(ReadOnly = true)]
+    public Guid ChannelId { get; set; }
 }

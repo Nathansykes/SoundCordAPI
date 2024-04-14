@@ -1,5 +1,6 @@
 ﻿using Project.Domain;
 using Project.Domain.Channels;
+using Project.Domain.Exceptions;
 using Project.Infrastructure.Model.Entities;
 
 namespace Project.Application.Channels;
@@ -12,6 +13,9 @@ public class ChannelService(
 
     public ChannelModel CreateChannel(Guid groupId, ChannelModel channel)
     {
+        var existingChannel = _channelRepository.GetByName(groupId, channel.ChannelName);
+        if (existingChannel != null)
+            throw new ValidationException($"Channel with name {channel.ChannelName} already exists");
         channel.GroupId = groupId;
         var entity = _mapper.MapToDatabaseModel(channel);
         _channelRepository.Create(entity);

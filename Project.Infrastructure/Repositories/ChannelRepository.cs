@@ -16,6 +16,11 @@ public class ChannelRepository(IUserApplicationDbContext context) : IChannelRepo
         return entity;
     }
 
+    public Channel? GetByName(Guid groupId, string channelName)
+    {
+        return GetAll().FirstOrDefault(x => x.GroupId == groupId && x.ChannelName == channelName);
+    }
+
     public IQueryable<Channel> GetAll()
     {
         return _context.Groups.Where(x => x.Users.Any(y => y.Id == _context.ContextUser.Id)).SelectMany(x => x.Channels);
