@@ -12,6 +12,7 @@ using Project.Auth;
 using Project.Auth.Identity.Models;
 using Project.Domain;
 using Project.Domain.Channels;
+using Project.Domain.Exceptions;
 using Project.Domain.Files;
 using Project.Domain.Files.FileUploading;
 using Project.Domain.Groups;
@@ -90,7 +91,7 @@ public static class ServicesExtensions
             var user = httpContext.HttpContext?.User;
             if (user is null || user.Identity?.Name is null || (!user.Identity.IsAuthenticated))
             {
-                throw new InvalidOperationException("Request is not authenticated, cannot access current user");
+                throw new DomainException("Request is not authenticated, cannot access current user", 401);
             }
 
             var userMgr = services.GetRequiredService<UserManager<ApplicationUser>>();

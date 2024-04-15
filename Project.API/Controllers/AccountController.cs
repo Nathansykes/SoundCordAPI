@@ -3,13 +3,30 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Project.Auth.Identity.Models;
 using Project.Auth.Roles;
+using Project.Domain;
 
 namespace Project.API.Controllers;
 
 [Route("api/[controller]/[action]")]
-public class AccountController(AuthorizationService authorizationService) : BaseController
+public class AccountController(
+    AuthorizationService authorizationService, 
+    IServiceProvider serviceProvider, 
+    RolesService rolesService) : BaseController
 {
     private readonly AuthorizationService _authorizationService = authorizationService;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly RolesService _rolesService = rolesService;
+
+    [HttpGet("~/api/account/user")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var userAccessor = _serviceProvider.GetRequiredService<ICurrentUserAccessor>();
+        var user = userAccessor.User;
+        var roles = await _rolesService.GetUserRolesAsync(user.UserName);
+        var model = new UserInfoModel(user.UserName, roles);
+        return Ok(model);
+    }
+
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
