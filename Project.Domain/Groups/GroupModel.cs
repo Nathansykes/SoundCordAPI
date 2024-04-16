@@ -9,7 +9,7 @@ public class GroupModel
     [SwaggerSchema(ReadOnly = true)]
     public Guid Id { get; set; }
 
-    [Required]
+    [Required(AllowEmptyStrings = false)]
     public string GroupName { get; set; } = "";
 
 

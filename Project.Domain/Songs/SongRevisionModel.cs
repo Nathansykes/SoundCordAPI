@@ -1,10 +1,12 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.Domain.Songs;
 public class SongRevisionModel
 {
     [SwaggerSchema(ReadOnly = true)]
     public Guid Id { get; set; }
+    [Required(AllowEmptyStrings = false)]
     public string? RevisionName { get; set; }
 
     [SwaggerSchema(ReadOnly = true)]
