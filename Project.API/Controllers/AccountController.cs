@@ -53,6 +53,26 @@ public class AccountController(
     }
 
     [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        var result = await _authorizationService.ResetPasswordAsync(request);
+        if (!result.Succeeded)
+            return CreateValidationProblem(result);
+        return Ok();
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+    {
+        var result = await _authorizationService.ForgotPasswordAsync(request);
+        if (!result.Succeeded)
+            return CreateValidationProblem(result);
+        return Ok();
+    }
+
+    [HttpPost]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
     {
         var result = await _authorizationService.ChangePasswordAsync(request);

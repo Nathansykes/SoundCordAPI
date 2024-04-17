@@ -19,6 +19,9 @@ public class ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDb
 
 public record ChangePasswordRequest([EmailAddress] string Username, string OldPassword, string NewPassword);
 public record AdminChangePasswordRequest([EmailAddress] string Username, string NewPassword);
-public record RegisterRequest([EmailAddress] string Username, string Password);
+public record RegisterRequest(string Username, [EmailAddress] string Email, string Password);
 public record LoginRequest([EmailAddress] string Username, string Password);
 public record RefreshRequest(string RefreshToken);
+
+public record ResetPasswordRequest (string Username, string Token, string NewPassword);
+public record ForgotPasswordRequest (string Username);

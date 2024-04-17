@@ -78,6 +78,7 @@ public static class ServicesExtensions
 
         services.ConfigureSignalR(config);
 
+        services.AddSingleton<EmailService>();
 
         return services;
     }
