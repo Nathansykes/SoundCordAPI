@@ -52,7 +52,7 @@ public class GroupRepository(IUserApplicationDbContext context) : IGroupReposito
         var user = _context.AspNetUsers.FirstOrDefault(x => x.UserName == userName) ?? throw new NotFoundException($"No user found with username: {userName}");
         var group = GetById(id);
         if (group.Users.Any(x => x.UserName == userName))
-            throw new ValidationException($"{userName} is already in group: {id}");
+            throw new ValidationException($"{userName} is already in group: {group.GroupName}");
         group.Users.Add(user);
         _context.SaveChanges();
     }
