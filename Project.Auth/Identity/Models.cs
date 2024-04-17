@@ -23,5 +23,5 @@ public record RegisterRequest(string Username, [EmailAddress] string Email, stri
 public record LoginRequest(string Username, string Password);
 public record RefreshRequest(string RefreshToken);
 
-public record ResetPasswordRequest (string Username, string Token, string NewPassword);
-public record ForgotPasswordRequest (string Username);
+public record ResetPasswordRequest(string Username, string Token, string NewPassword);
+public record ForgotPasswordRequest(string Username);

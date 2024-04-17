@@ -1,11 +1,7 @@
 ﻿using IdentityModel.Client;
-using Mailjet.Client;
-using Mailjet.Client.Resources;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Text;
-using System.Text.Json;
 
 namespace Project.Generic;
 public class EmailService(IConfiguration configuration)
@@ -34,7 +30,7 @@ public class EmailService(IConfiguration configuration)
                 }
             }
         };
-        
+
         var content = JsonConvert.SerializeObject(model);
         content = content.Replace("HtmlPart", "Html-part");
         content = content.Replace("TextPart", "Text-part");

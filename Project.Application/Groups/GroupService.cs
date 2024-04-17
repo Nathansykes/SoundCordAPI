@@ -37,4 +37,9 @@ public class GroupService(
     {
         _groupRepository.AddUserToGroup(groupId, userName);
     }
+
+    public void RemoveUserFromGroup(Guid groupId, string userName)
+    {
+        _groupRepository.RemoveUserFromGroup(groupId, userName);
+    }
 }

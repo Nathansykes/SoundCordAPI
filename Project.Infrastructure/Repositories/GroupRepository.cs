@@ -56,4 +56,19 @@ public class GroupRepository(IUserApplicationDbContext context) : IGroupReposito
         group.Users.Add(user);
         _context.SaveChanges();
     }
+
+    public void RemoveUserFromGroup(Guid id, string userName)
+    {
+        var user = _context.AspNetUsers.FirstOrDefault(x => x.UserName == userName) ?? throw new NotFoundException($"No user found with username: {userName}");
+        var group = GetById(id);
+
+        if (group.CreatedByUserId == user.Id)
+            throw new ValidationException("Cannot leave this group as you created it");
+
+        if (group.Users.Any(x => x.Id == user.Id))
+        {
+            group.Users.Remove(user);
+            _context.SaveChanges();
+        }
+    }
 }

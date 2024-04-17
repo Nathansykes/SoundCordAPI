@@ -6,6 +6,8 @@ public interface IGroupService
     GroupModel GetGroup(Guid id);
     ICollection<GroupModel> GetGroups();
     void AddUserToGroup(Guid groupId, string userName);
+
+    void RemoveUserFromGroup(Guid groupId, string userName);
 }
 
 

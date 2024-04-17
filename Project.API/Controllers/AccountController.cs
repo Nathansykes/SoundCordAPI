@@ -9,8 +9,8 @@ namespace Project.API.Controllers;
 
 [Route("api/[controller]/[action]")]
 public class AccountController(
-    AuthorizationService authorizationService, 
-    IServiceProvider serviceProvider, 
+    AuthorizationService authorizationService,
+    IServiceProvider serviceProvider,
     RolesService rolesService) : BaseController
 {
     private readonly AuthorizationService _authorizationService = authorizationService;

@@ -39,4 +39,11 @@ public class GroupsController(IGroupService groupService) : BaseController
         return Ok();
     }
 
+    [HttpPost("{groupId}/leave")]
+    public IActionResult LeaveGroup(Guid groupId)
+    {
+        _groupService.RemoveUserFromGroup(groupId, User.Identity!.Name!);
+        return Ok();
+    }
+
 }

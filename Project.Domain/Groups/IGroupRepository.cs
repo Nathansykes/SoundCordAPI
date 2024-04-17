@@ -2,6 +2,7 @@
 public interface IGroupRepository<TGroupEntity> where TGroupEntity : new()
 {
     void AddUserToGroup(Guid id, string userName);
+    void RemoveUserFromGroup(Guid id, string userName);
     TGroupEntity Create(TGroupEntity entity);
     void DeleteById(Guid id);
     IQueryable<TGroupEntity> GetAll();
