@@ -90,7 +90,7 @@ public class AuthorizationService(
     {
         var user = await _userManager.FindByNameAsync(request.Username);
         if (user is null)
-            return IdentityResult.Failed(_userManager.ErrorDescriber.InvalidUserName(request.Username));
+            return IdentityResult.Failed(_userManager.ErrorDescriber.UsernameNotFound(request.Username));
 
         if (string.IsNullOrWhiteSpace(user.Email) || !_emailAddressAttribute.IsValid(user.Email))
             return IdentityResult.Failed(new IdentityError() { Code = "InvalidEmail", Description = "Your user does not have a valid email set, unable to reset password" });
@@ -120,7 +120,9 @@ public class AuthorizationService(
         if (user is null)
             return IdentityResult.Failed(_userManager.ErrorDescriber.InvalidUserName(request.Username));
 
-        var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        var result = await _userManager.ResetPasswordAsync(user, request.Token.Replace(' ', '+'), request.NewPassword);
+        if ((!result.Succeeded) && result.Errors.Any(e => e.Code == "InvalidToken"))
+            return IdentityResult.Failed(new IdentityError() { Code = "InvalidToken", Description = "Unable to reset password, please try requesting a new password reset link." });
         return result;
     }
     public async Task<(IdentityResult IdentityResult, IResult? ActionResult)> RefreshAsync(RefreshRequest refreshRequest)
