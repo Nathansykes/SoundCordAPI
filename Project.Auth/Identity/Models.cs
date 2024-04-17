@@ -17,10 +17,10 @@ public class ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDb
 }
 
 
-public record ChangePasswordRequest([EmailAddress] string Username, string OldPassword, string NewPassword);
-public record AdminChangePasswordRequest([EmailAddress] string Username, string NewPassword);
+public record ChangePasswordRequest(string Username, string OldPassword, string NewPassword);
+public record AdminChangePasswordRequest(string Username, string NewPassword);
 public record RegisterRequest(string Username, [EmailAddress] string Email, string Password);
-public record LoginRequest([EmailAddress] string Username, string Password);
+public record LoginRequest(string Username, string Password);
 public record RefreshRequest(string RefreshToken);
 
 public record ResetPasswordRequest (string Username, string Token, string NewPassword);
