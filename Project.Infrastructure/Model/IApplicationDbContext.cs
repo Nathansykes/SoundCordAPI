@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Project.Domain;
+using Project.Domain.Exceptions;
 using Project.Infrastructure.Model.Entities;
 
 namespace Project.Infrastructure.Model;
@@ -37,7 +38,14 @@ public interface IUserApplicationDbContext : IApplicationDbContext
 public class UserApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserAccessor userAccessor)
     : ApplicationDbContext(options), IUserApplicationDbContext
 {
-    private readonly IApplicationUser _user = userAccessor.User;
+    private IApplicationUser? _userNull;
+    private IApplicationUser User => _userNull ??= userAccessor.User ?? throw new DomainException("Request is not authenticated, cannot access current user", 401);
     private AspNetUser? _contextUser;
-    public AspNetUser ContextUser => _contextUser ??= AspNetUsers.First(x => x.Id == _user.Id);
+    public AspNetUser ContextUser
+    {
+        get
+        {
+            return _contextUser ??= AspNetUsers.First(x => x.Id == User.Id);
+        }
+    }
 }

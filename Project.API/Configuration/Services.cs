@@ -70,15 +70,28 @@ public static class ServicesExtensions
         });
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddMemoryCache();
-        services.AddCors();
+        services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy",builder =>
+            {
+                builder.AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials()
+                       .SetIsOriginAllowed(_ => true);
+            });
+        });
+        services.ConfigureSignalR(config);
+
+
         services.AddControllers();
         services.AddHttpContextAccessor();
         services.AddScoped<AuthorizationExtensions>();
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        services.ConfigureSignalR(config);
 
         services.AddSingleton<EmailService>();
+
+        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
 
         return services;
     }
@@ -86,23 +99,23 @@ public static class ServicesExtensions
 
     public static IServiceCollection AddDomain(this IServiceCollection services)
     {
-        services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>(services =>
-        {
-            var httpContext = services.GetRequiredService<IHttpContextAccessor>();
-            var user = httpContext.HttpContext?.User;
-            if (user is null || user.Identity?.Name is null || (!user.Identity.IsAuthenticated))
-            {
-                throw new DomainException("Request is not authenticated, cannot access current user", 401);
-            }
+        //services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>(services =>
+        //{
+        //    var httpContext = services.GetRequiredService<IHttpContextAccessor>();
+        //    var user = httpContext.HttpContext?.User;
+        //    if (user is null || user.Identity?.Name is null || (!user.Identity.IsAuthenticated))
+        //    {
+        //        throw new DomainException("Request is not authenticated, cannot access current user", 401);
+        //    }
 
-            var userMgr = services.GetRequiredService<UserManager<ApplicationUser>>();
-            var appUser = new ApplicationUserModel
-            {
-                Id = userMgr.GetUserId(user)!,
-                UserName = userMgr.GetUserName(user)!
-            };
-            return new CurrentUserAccessor(appUser);
-        });
+        //    var userMgr = services.GetRequiredService<UserManager<ApplicationUser>>();
+        //    var appUser = new ApplicationUserModel
+        //    {
+        //        Id = userMgr.GetUserId(user)!,
+        //        UserName = userMgr.GetUserName(user)!
+        //    };
+        //    return new CurrentUserAccessor(appUser);
+        //});
         services.AddScoped<IUserAccessValidator, UserAccessValidator>();
         services.AddClassesAsImplementedInterface(_applicationAssemblies, typeof(IModelMapper<,>));
 
@@ -166,8 +179,8 @@ public static class ServicesExtensions
     {
         services.AddSignalR().AddHubOptions<MessageHub>(options =>
         {
-
-        });
+            options.EnableDetailedErrors = true;
+        }).AddAzureSignalR(config["Azure:SignalR:ConnectionString"]);
         return services;
     }
 

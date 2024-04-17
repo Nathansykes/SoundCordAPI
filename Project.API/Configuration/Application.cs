@@ -15,15 +15,16 @@ public static class ApplicationExtensions
         app.UseSwagger();
         app.UseSwaggerUI();
 
-        app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+        app.UseCors("CorsPolicy");
 
         app.UseRouting();
+        app.MapHub<MessageHub>("/messageshub");
         app.UseAuthentication();
         app.UseAuthorization();
 
+
         app.MapControllers();
 
-        app.MapHub<MessageHub>("/messageshub");
 
         return app;
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Project.Domain;
 using Project.Domain.Channels;
 using Project.Domain.Messages;
 using SignalRSwaggerGen.Attributes;
@@ -7,13 +8,28 @@ namespace Project.API.Hubs.Messages;
 
 [Authorize]
 [SignalRHub("/messageshub")]
-public class MessageHub(IChannelService channelService, IMessageService messageService) : Hub
+public class MessageHub(IChannelService channelService, IMessageService messageService, ICurrentUserAccessor currentUserAccessor) : Hub
 {
     private readonly IChannelService _channelService = channelService;
     private readonly IMessageService _messageService = messageService;
+    private readonly ICurrentUserAccessor _currentUserAccessor = currentUserAccessor;
+
+    private void SetUser()
+    {
+        if (_currentUserAccessor.User is null)
+        {
+            var user = new ApplicationUserModel
+            {
+                Id = Context.UserIdentifier!,
+                UserName = Context.User!.Identity!.Name!
+            };
+            _currentUserAccessor.SetUser(user);
+        }
+    }
 
     public async Task Message(SendChannelMessageRequest request)
     {
+        SetUser();
         if (!await ValidateChannelAccess(request.ChannelId))
             return;
 
@@ -21,8 +37,15 @@ public class MessageHub(IChannelService channelService, IMessageService messageS
         await Clients.Group(request.ChannelId.ToString()).SendAsync("Message", createdMessage);
     }
 
+    public async Task Echo(string name, string message)
+    {
+        
+        await Clients.Client(Context.ConnectionId).SendAsync("echo", name, $"{message} (echo from server)");
+    }
+
     public async Task ConnectToChannel(ChannelHubRequest request)
     {
+        SetUser();
         if (!await ValidateChannelAccess(request.ChannelId))
             return;
 
@@ -32,6 +55,7 @@ public class MessageHub(IChannelService channelService, IMessageService messageS
 
     public async Task DisconnectFromChannel(ChannelHubRequest request)
     {
+        SetUser();
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, request.ChannelId.ToString());
         await Clients.Caller.SendAsync("Disconnected", request.ChannelId);
     }

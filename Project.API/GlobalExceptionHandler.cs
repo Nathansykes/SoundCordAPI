@@ -29,7 +29,7 @@ public class GlobalExceptionHandler(
     private async Task HandleException(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         LogException(exception, httpContext);
-        if (ShowDeveloperError(httpContext))
+        if (true || ShowDeveloperError(httpContext))
             await WriteResponse(httpContext, StatusCodes.Status500InternalServerError, exception.Message, exception.StackTrace ?? "", cancellationToken);
         else
             await WriteResponse(httpContext, StatusCodes.Status500InternalServerError, "Server Error", "An internal server error occured, please contact an administrator", cancellationToken);

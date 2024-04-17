@@ -1,4 +1,10 @@
-﻿namespace Project.Domain;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
+using Project.Domain.Exceptions;
+
+namespace Project.Domain;
 
 public interface IApplicationUser
 {
@@ -13,10 +19,7 @@ public class ApplicationUserModel : IApplicationUser
 
 public interface ICurrentUserAccessor
 {
-    public IApplicationUser User { get; }
+    public void SetUser(IApplicationUser? user);
+    public IApplicationUser? User { get; }
 }
 
-public class CurrentUserAccessor(IApplicationUser user) : ICurrentUserAccessor
-{
-    public IApplicationUser User { get; } = user;
-}
