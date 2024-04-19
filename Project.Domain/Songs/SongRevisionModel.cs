@@ -15,11 +15,15 @@ public class SongRevisionModel
     [SwaggerSchema(ReadOnly = true)]
     public string CreatedByUser { get; set; } = "";
 
+    [SwaggerSchema(ReadOnly = true)]
+    public int? LengthMilliseconds { get; set; }
 
     [SwaggerSchema(ReadOnly = true)]
     public DateTime CreatedUtc { get; set; }
+
     [SwaggerSchema(ReadOnly = true)]
     public Guid? FileMetadataId { get; set; }
+
     [SwaggerSchema(ReadOnly = true)]
     public Guid ChannelId { get; set; }
 }

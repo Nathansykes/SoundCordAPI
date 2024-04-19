@@ -24,6 +24,7 @@ public class SongRevisionMapper : IModelMapper<SongRevision, SongRevisionModel>
         domainModel.ChannelId = databaseModel.Song.ChannelId;
         domainModel.CreatedByUser = databaseModel.CreatedByUser.UserName!;
         domainModel.CreatedUtc = databaseModel.CreatedUtc;
+        domainModel.LengthMilliseconds = databaseModel.LengthMilliseconds > 0 ? databaseModel.LengthMilliseconds : null;
         return domainModel;
     }
 }
