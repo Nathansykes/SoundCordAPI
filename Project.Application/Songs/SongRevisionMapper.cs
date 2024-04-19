@@ -11,6 +11,7 @@ public class SongRevisionMapper : IModelMapper<SongRevision, SongRevisionModel>
         databaseModel ??= new SongRevision();
         databaseModel.RevisionName = domainModel.RevisionName;
         databaseModel.SongId = domainModel.SongId;
+        databaseModel.LengthMilliseconds = domainModel.LengthMilliseconds;
         return databaseModel;
     }
 
