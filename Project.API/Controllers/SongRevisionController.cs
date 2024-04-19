@@ -4,14 +4,9 @@ using Project.Domain.Songs;
 namespace Project.API.Controllers;
 
 [Route("api/")]
-public class SongRevisionController : BaseController
+public class SongRevisionController(ISongRevisionService songRevisionService) : BaseController
 {
-    private readonly ISongRevisionService _songRevisionService;
-
-    public SongRevisionController(ISongRevisionService songRevisionService)
-    {
-        _songRevisionService = songRevisionService;
-    }
+    private readonly ISongRevisionService _songRevisionService = songRevisionService;
 
     [HttpGet("songs/{songId}/revisions")]
     public IActionResult GetRevisions(Guid songId)

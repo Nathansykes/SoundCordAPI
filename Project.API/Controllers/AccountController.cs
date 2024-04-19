@@ -22,7 +22,7 @@ public class AccountController(
     {
         var userAccessor = _serviceProvider.GetRequiredService<ICurrentUserAccessor>();
         var user = userAccessor.User;
-        var roles = await _rolesService.GetUserRolesAsync(user.UserName);
+        var roles = await _rolesService.GetUserRolesAsync(user!.UserName);
         var model = new UserInfoModel(user.UserName, roles);
         return Ok(model);
     }

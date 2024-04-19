@@ -11,13 +11,13 @@ public class GroupService(
 {
     private readonly IGroupRepository<Group> _groupRepository = groupRepository;
     private readonly IModelMapper<Group, GroupModel> _modelMapper = modelMapper;
-    private readonly IApplicationUser _user = currentUserAccessor.User;
+    private readonly ICurrentUserAccessor _userAccessor = currentUserAccessor;
 
     public GroupModel CreateGroup(GroupModel group)
     {
         var entity = _modelMapper.MapToDatabaseModel(group);
         _groupRepository.Create(entity);
-        AddUserToGroup(entity.Id, _user.UserName);
+        AddUserToGroup(entity.Id, _userAccessor.User!.UserName);
         return _modelMapper.MapToDomainModel(entity);
     }
 
