@@ -9,6 +9,7 @@ public class FileDownloadModel : IFileModel
     public string Extension { get; init; } = null!;
     public string Content { get; set; } = null!;
     public string? ContentHash { get; set; }
+    public string? ContentType { get; set; }
 
     public void SetContentFromStream(Stream stream)
     {

@@ -1,4 +1,5 @@
 ﻿using Project.Domain;
+using Project.Domain.Files;
 using Project.Domain.Songs;
 using Project.Infrastructure.Model.Entities;
 
@@ -26,6 +27,19 @@ public class SongRevisionMapper : IModelMapper<SongRevision, SongRevisionModel>
         domainModel.CreatedByUser = databaseModel.CreatedByUser.UserName!;
         domainModel.CreatedUtc = databaseModel.CreatedUtc;
         domainModel.LengthMilliseconds = databaseModel.LengthMilliseconds;
+        if (databaseModel.FileMetaData is not null)
+        {
+            domainModel.File = new FileModel()
+            {
+                Id = databaseModel.Id,
+                FileName = databaseModel.FileMetaData.OriginalFileName,
+                Extension = databaseModel.FileMetaData.OriginalExtension,
+                ContentLength = databaseModel.FileMetaData.ContentLengthBytes,
+                ContentType = databaseModel.FileMetaData.ContentType,
+                UploadedByUser = databaseModel.CreatedByUser.UserName!,
+                UploadedUtc = databaseModel.FileMetaData.UploadedUtc,
+            };
+        }
         return domainModel;
     }
 }

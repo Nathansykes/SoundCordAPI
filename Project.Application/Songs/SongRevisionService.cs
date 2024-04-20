@@ -34,6 +34,7 @@ public class SongRevisionService(
             Content = request.File.Content,
             Extension = request.File.Extension,
             OriginalFileName = request.File.FileName,
+            ContentType = request.File.ContentType,
         };
         Guid[] directories = [songEntity.ChannelId, songId];
         var file = await _fileUploadService.UploadFile(directories, fileUploadModel);
@@ -46,6 +47,7 @@ public class SongRevisionService(
             Directory = string.Join('/', directories),
             ContentHash = file.ContentHash ?? file.GetContentAsByteArray()!.ComputeMD5Hash().GetBytesAsHexString(),
             ContentLengthBytes = file.GetContentAsByteArray()!.Length,
+            ContentType = file.ContentType,
             FileShare = _configuration.GetConnectionString("Azure:ShareName")!,
         };
 

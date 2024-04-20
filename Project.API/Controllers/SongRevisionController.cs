@@ -23,6 +23,7 @@ public class SongRevisionController(ISongRevisionService songRevisionService) : 
     }
 
     [HttpPost("songs/{songId}/revisions")]
+    [DisableRequestSizeLimit]
     public async Task<IActionResult> CreateRevision(Guid songId, CreateSongRevisionRequest model)
     {
         var result = await _songRevisionService.CreateSongRevision(songId, model);

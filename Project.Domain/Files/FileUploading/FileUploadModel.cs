@@ -7,6 +7,7 @@ public class FileUploadModel : IFileModel
     public string Extension { get; set; } = null!;
     public string? Content { get; set; }
     public string? ContentHash { get; set; }
+    public string? ContentType { get; set; }
 
     public void CreateNewFileName() => NewFileName = Guid.NewGuid().ToString();
 }

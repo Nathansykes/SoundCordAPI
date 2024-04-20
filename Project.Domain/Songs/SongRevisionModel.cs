@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using Project.Domain.Files;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
 namespace Project.Domain.Songs;
@@ -25,4 +26,6 @@ public class SongRevisionModel
 
     [SwaggerSchema(ReadOnly = true)]
     public Guid ChannelId { get; set; }
+    [SwaggerSchema(ReadOnly = true)]
+    public FileModel? File { get; set; }
 }
