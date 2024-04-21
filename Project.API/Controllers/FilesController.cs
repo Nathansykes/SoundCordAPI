@@ -2,6 +2,7 @@
 using Project.Domain.Files;
 using Project.Domain.Files.FileUploading;
 using Project.Infrastructure.Model.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.API.Controllers;
 
@@ -11,14 +12,45 @@ public class FilesController(IFileUploadService fileUploadService, IFileMetadata
     private readonly IFileUploadService _fileUploadService = fileUploadService;
     private readonly IFileMetadataRepository<FileMetadatum> _fileMetadataRepository = fileMetadataRepository;
 
-    //[HttpPost("Upload")]
-    //public async Task<IActionResult> UploadFile(FileUploadModel model)
-    //{
-    //    var directory = Guid.Parse("0497d7e0-54ab-4e76-98ab-746fbc8d8cef");
-    //    var result = await _fileUploadService.UploadFile([directory], model);
-    //    return Ok(result);
-    //}
+
+    [HttpPost("download/{fileId}/meta")]
+    public IActionResult DownloadFileMeta(Guid fileId)
+    {
+        var file = _fileMetadataRepository.GetById(fileId);
+
+        var dl = new FileModel()
+        {
+            Id = file.Id,
+            FileName = file.OriginalFileName,
+            Extension = file.OriginalExtension,
+            UploadedByUser = file.UploadedByUser.UserName!,
+            ContentLength = file.ContentLengthBytes,
+            ContentType = file.ContentType,
+        };
+        return Ok(dl);
+    }
+
+    [HttpPost("download/{fileId}/content")]
+    public async Task<FileContentResult> DownloadFileData(Guid fileId)
+    {
+        var file = _fileMetadataRepository.GetById(fileId);
+
+        var directories = file.Directory.Split('/').Select(Guid.Parse);
+        var request = new FileDownloadRequest()
+        {
+            Extension = file.OriginalExtension,
+            NewFileName = file.NewFileName,
+            OriginalFileName = file.OriginalFileName,
+        };
+
+        var result = await _fileUploadService.DownloadFile(directories, request);
+
+        return File(result.GetContentAsByteArray()!, file.ContentType ?? "application/octet-stream");
+    }
+
+
     [HttpPost("download/{fileId}")]
+    [Experimental("api")]
     public async Task<IActionResult> DownloadFile(Guid fileId)
     {
         var file = _fileMetadataRepository.GetById(fileId);
