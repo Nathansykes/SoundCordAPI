@@ -31,7 +31,7 @@ public class SongRevisionMapper : IModelMapper<SongRevision, SongRevisionModel>
         {
             domainModel.File = new FileModel()
             {
-                Id = databaseModel.Id,
+                Id = databaseModel.FileMetaData.Id,
                 FileName = databaseModel.FileMetaData.OriginalFileName,
                 Extension = databaseModel.FileMetaData.OriginalExtension,
                 ContentLength = databaseModel.FileMetaData.ContentLengthBytes,

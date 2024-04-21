@@ -18,7 +18,7 @@ public class FilesController(IFileUploadService fileUploadService, IFileMetadata
     //    var result = await _fileUploadService.UploadFile([directory], model);
     //    return Ok(result);
     //}
-    [HttpPost("Download/{fileId}")]
+    [HttpPost("download/{fileId}")]
     public async Task<IActionResult> DownloadFile(Guid fileId)
     {
         var file = _fileMetadataRepository.GetById(fileId);
@@ -34,6 +34,7 @@ public class FilesController(IFileUploadService fileUploadService, IFileMetadata
         var result = await _fileUploadService.DownloadFile(directories, request);
         var dl = new FileModel()
         {
+            Id = file.Id,
             Content = result.Content!,
             FileName = file.OriginalFileName,
             Extension = file.OriginalExtension,

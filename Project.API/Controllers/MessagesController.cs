@@ -16,4 +16,13 @@ public class MessagesController(IMessageService MessageService) : BaseController
         var messages = _messageService.GetMessages(channelId);
         return Ok(messages);
     }
+
+    [HttpGet("{channelId}/songrevisions/{songRevisionId}")]
+    [ProducesResponseType(typeof(MessageModel[]), StatusCodes.Status200OK)]
+    public IActionResult GetMessages(Guid channelId, Guid songRevisionId)
+    {
+        //TODO add pagination
+        var messages = _messageService.GetMessagesForSongRevision(channelId, songRevisionId);
+        return Ok(messages);
+    }
 }
