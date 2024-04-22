@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Auth.Identity.Models;
 using Project.Auth.Roles;
 using Project.Domain;
+using Project.Infrastructure.Model;
 
 namespace Project.API.Controllers;
 
@@ -11,11 +12,13 @@ namespace Project.API.Controllers;
 public class AccountController(
     AuthorizationService authorizationService,
     IServiceProvider serviceProvider,
-    RolesService rolesService) : BaseController
+    RolesService rolesService,
+    IApplicationDbContext context) : BaseController
 {
     private readonly AuthorizationService _authorizationService = authorizationService;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly RolesService _rolesService = rolesService;
+    private readonly IApplicationDbContext _context = context;
 
     [HttpGet("~/api/account/user")]
     public async Task<IActionResult> GetCurrentUser()
@@ -39,6 +42,15 @@ public class AccountController(
         {
             return CreateValidationProblem(result);
         }
+        
+        var group = _context.Groups.FirstOrDefault(x => x.GroupName == "Dreadful Creatures");
+        var user = _context.AspNetUsers.FirstOrDefault(x => x.UserName == registration.Username);
+        if (group is not null && user is not null)
+        {
+            group.Users.Add(user);
+            _context.SaveChanges();
+        }
+
         return Ok();
     }
 
