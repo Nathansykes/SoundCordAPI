@@ -160,7 +160,11 @@ public static class ServicesExtensions
 
     public static IServiceCollection ConfigureSignalR(this IServiceCollection services, IConfiguration config)
     {
-        services.AddSignalR().AddHubOptions<MessageHub>(options =>
+        services.AddSingleton<HubExceptionFilter>();
+        services.AddSignalR(options =>
+        {
+            options.AddFilter<HubExceptionFilter>();
+        }).AddHubOptions<MessageHub>(options =>
         {
             options.EnableDetailedErrors = true;
         }).AddAzureSignalR(config["Azure:SignalR:ConnectionString"]);

@@ -9,6 +9,8 @@ public class MessageMapper : IModelMapper<Message, MessageModel>
     {
         databaseModel ??= new();
         databaseModel.Content = domainModel.Content;
+        databaseModel.SongRevisionId = domainModel.SongRevisionId;
+        databaseModel.SongTimestampMilliseconds = domainModel.SongTimestampMilliseconds;
         return databaseModel;
     }
 

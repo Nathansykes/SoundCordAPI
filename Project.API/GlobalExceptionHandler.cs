@@ -1,9 +1,15 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
+using Project.Auth;
 using Project.Auth.Roles;
 using Project.Domain.Exceptions;
 using Project.Generic;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Net;
@@ -11,15 +17,63 @@ using System.Text;
 
 namespace Project.API;
 
+
+public class HubExceptionFilter(
+    EmailService emailService,
+    IWebHostEnvironment webHostEnvironment,
+    ILogger<HubExceptionFilter> logger) : IHubFilter
+{
+    private readonly ILogger<HubExceptionFilter> _logger = logger;
+    private readonly EmailService _emailService = emailService;
+    private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
+
+    public async ValueTask<object?> InvokeMethodAsync(HubInvocationContext invocationContext, Func<HubInvocationContext, ValueTask<object?>> next)
+    {
+        try
+        {
+            return await next(invocationContext);
+        }
+        catch (Exception ex)
+        {
+            await LogException(invocationContext, ex);
+            throw;
+        }
+    }
+    private async Task LogException(HubInvocationContext invocationContext, Exception exception)
+    {
+        _logger.LogError(exception, "An exception of type {ExceptionTypeName} occurred. HttpRequest TraceIdentifier: {TraceIdentifier}", exception.GetType().Name, invocationContext.Context.ConnectionId);
+        var exceptionString = BuildExceptionString(exception).ReplaceLineEndings("<br />");
+        var exceptionSubject = $"SignalR - {_webHostEnvironment.EnvironmentName}; Type: {exception.GetType().Name}; Time: {DateTime.UtcNow:dd/MM/yyyy HH:mm:ss:ff}";
+        await _emailService.SendEmail("nathansykes10@hotmail.com", exceptionSubject, exceptionString);
+    }
+
+    public string BuildExceptionString(Exception exception, StringBuilder? sb = null)
+    {
+        sb ??= new();
+        sb.AppendLine("=========== Host Information ===========");
+        sb.AppendLine($"Environment: {_webHostEnvironment.EnvironmentName}");
+        sb.AppendLine("Calling Assembly: " + GlobalExceptionHandler.GetExceptionLocationAssemblyName(exception));
+        sb.AppendLine($"Application Name: {_webHostEnvironment.ApplicationName}");
+        sb.AppendLine($"Computer Name: {Environment.MachineName}");
+        sb.AppendLine($"Host Addresses:");
+        foreach (var address in Dns.GetHostAddresses(Dns.GetHostName()))
+            sb.AppendLine($"\t - {address}");
+        sb.ToString();
+
+        sb.AppendLine("=========== Exception Information ===========");
+        sb.AppendLine(GlobalExceptionHandler.BuildStackTrace(exception));
+
+        return sb.ToString();
+    }
+}
+
 public class GlobalExceptionHandler(
-    IWebHostEnvironment environment,
     ILogger<GlobalExceptionHandler> logger,
     IConfiguration configuration,
     ProblemDetailsFactory problemDetailsFactory,
     EmailService emailService,
     IWebHostEnvironment webHostEnvironment) : IExceptionHandler
 {
-    private readonly IWebHostEnvironment _environment = environment;
     private readonly ILogger _logger = logger;
     private readonly IConfiguration _configuration = configuration;
     private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;
@@ -63,7 +117,7 @@ public class GlobalExceptionHandler(
     }
 
     private bool ShowDeveloperError(HttpContext httpContext)
-        => _environment.IsDevelopment()
+        => _webHostEnvironment.IsDevelopment()
         || _configuration.GetValue("DetailedExceptionLogging", false)
         || httpContext.User.IsInRole(UserRoles.Developer);
 
@@ -79,12 +133,12 @@ public class GlobalExceptionHandler(
     private async Task LogException(Exception exception, HttpContext httpContext)
     {
         _logger.LogError(exception, "An exception of type {ExceptionTypeName} occurred. HttpRequest TraceIdentifier: {TraceIdentifier}", exception.GetType().Name, httpContext.TraceIdentifier);
-        var exceptionString = BuildExceptionString(httpContext, exception).ReplaceLineEndings("<br />");
+        var exceptionString = BuildExceptionStringContextual(httpContext, exception).ReplaceLineEndings("<br />");
         var exceptionSubject = $"{_webHostEnvironment.EnvironmentName}; Type: {exception.GetType().Name}; Time: {DateTime.UtcNow:dd/MM/yyyy HH:mm:ss:ff}";
         await _emailService.SendEmail("nathansykes10@hotmail.com", exceptionSubject, exceptionString);
     }
 
-    public string BuildExceptionString(HttpContext httpContext, Exception exception)
+    public string BuildExceptionStringContextual(HttpContext httpContext, Exception exception)
     {
         var sb = new StringBuilder();
         sb.AppendLine("=========== Request Information ===========");
@@ -93,6 +147,12 @@ public class GlobalExceptionHandler(
         sb.AppendLine($"Request Url: {httpContext.Request.GetDisplayUrl()}");
         sb.AppendLine($"Request IP: {httpContext.Connection.RemoteIpAddress}");
         sb.AppendLine($"Http Status Code: {httpContext.Response.StatusCode}");
+        return BuildExceptionString(exception, sb);
+    }
+
+    public string BuildExceptionString(Exception exception, StringBuilder? sb = null)
+    {
+        sb ??= new();
         sb.AppendLine("=========== Host Information ===========");
         sb.AppendLine($"Environment: {_webHostEnvironment.EnvironmentName}");
         sb.AppendLine("Calling Assembly: " + GetExceptionLocationAssemblyName(exception));
@@ -109,7 +169,7 @@ public class GlobalExceptionHandler(
         return sb.ToString();
     }
 
-    public string BuildStackTrace(Exception exception)
+    public static string BuildStackTrace(Exception exception)
     {
         var sb = new StringBuilder();
         sb.AppendLine("<hr /> =========== Stack Trace =========== <hr />");
@@ -120,7 +180,7 @@ public class GlobalExceptionHandler(
         return sb.ToString();
     }
 
-    private static void BuildStackTraceRecursive(Exception exception, ref int innerExceptionCount, StringBuilder sb)
+    public static void BuildStackTraceRecursive(Exception exception, ref int innerExceptionCount, StringBuilder sb)
     {
         if (innerExceptionCount >= 100)
             return;
@@ -147,7 +207,7 @@ public class GlobalExceptionHandler(
 
     }
 
-    public string? GetExceptionLocationAssemblyName(Exception exception)
+    public static string? GetExceptionLocationAssemblyName(Exception exception)
     {
         var localAssemblies = AppDomain.CurrentDomain.GetAssemblies()
             .Where(x => x.FullName?.Contains("project.", StringComparison.OrdinalIgnoreCase) ?? false)
