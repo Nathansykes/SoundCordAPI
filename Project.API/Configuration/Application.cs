@@ -1,5 +1,7 @@
-﻿using Project.API.Authorization;
+﻿using Microsoft.EntityFrameworkCore;
+using Project.API.Authorization;
 using Project.API.Hubs.Messages;
+using Project.Infrastructure.Model;
 
 namespace Project.API.Configuration;
 
@@ -10,6 +12,12 @@ public static class ApplicationExtensions
         app.UseExceptionHandler(_ => { });
 
         app.MapPost("ping", () => Results.Ok("pong"));
+
+        app.MapPost("api/wakeup", async (IApplicationDbContext _context) =>
+        {
+            var g = await _context.Groups.FirstOrDefaultAsync();
+            return Results.Ok("awake");
+        });
 
         app.UseMiddleware<SwaggerAuthorizationMiddleware>();
         app.UseSwagger();
