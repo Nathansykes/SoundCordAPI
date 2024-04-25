@@ -42,8 +42,10 @@ public class AccountController(
         {
             return CreateValidationProblem(result);
         }
+
+        var exampleGroup = Guid.Parse("F8E94F19-6301-EF11-AAF0-6045BD13BBCF");
         
-        var group = _context.Groups.FirstOrDefault(x => x.GroupName == "Dreadful Creatures");
+        var group = _context.Groups.FirstOrDefault(x => x.Id == exampleGroup);
         var user = _context.AspNetUsers.FirstOrDefault(x => x.UserName == registration.Username);
         if (group is not null && user is not null)
         {
