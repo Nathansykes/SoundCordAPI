@@ -48,4 +48,12 @@ public class UserApplicationDbContext(DbContextOptions<ApplicationDbContext> opt
             return _contextUser ??= AspNetUsers.First(x => x.Id == User.Id);
         }
     }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Group>()
+            .HasQueryFilter(group => group.Users.Any(x => x.Id == User.Id));
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
