@@ -15,8 +15,8 @@ public static class ApplicationExtensions
 
         app.MapPost("api/wakeup", async (IApplicationDbContext _context) =>
         {
-            var g = await _context.Groups.FirstOrDefaultAsync();
-            return Results.Ok("awake");
+            var available = await _context.Database.CanConnectAsync();
+            return available ? Results.StatusCode(200) : Results.StatusCode(503);
         });
 
         app.UseMiddleware<SwaggerAuthorizationMiddleware>();
