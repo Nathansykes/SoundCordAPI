@@ -1,17 +1,11 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
-using Project.Auth;
 using Project.Auth.Roles;
 using Project.Domain.Exceptions;
 using Project.Generic;
-using System;
 using System.Collections;
-using System.Diagnostics;
 using System.Net;
 using System.Text;
 

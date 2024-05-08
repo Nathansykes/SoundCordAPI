@@ -39,7 +39,7 @@ public class MessageHub(IChannelService channelService, IMessageService messageS
 
     public async Task Echo(string name, string message)
     {
-        
+
         await Clients.Client(Context.ConnectionId).SendAsync("echo", name, $"{message} (echo from server)");
     }
 

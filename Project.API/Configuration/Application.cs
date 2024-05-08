@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Project.API.Authorization;
+﻿using Project.API.Authorization;
 using Project.API.Hubs.Messages;
 using Project.Infrastructure.Model;
 

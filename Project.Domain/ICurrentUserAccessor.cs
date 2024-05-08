@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.DependencyInjection;
-using Project.Domain.Exceptions;
-
-namespace Project.Domain;
+﻿namespace Project.Domain;
 
 public interface IApplicationUser
 {

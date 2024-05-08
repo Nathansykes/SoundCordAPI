@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Project.Auth.Identity.Models;
-using Project.Domain.Exceptions;
 using Project.Domain;
 
 namespace Project.API;

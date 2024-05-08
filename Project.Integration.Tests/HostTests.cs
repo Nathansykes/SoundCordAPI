@@ -1,12 +1,5 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using NuGet.Frameworks;
-using NUnit.Framework;
 
 namespace Project.Integration.Tests;
 
@@ -19,14 +12,14 @@ public class HostTests
     [SetUp]
     public void Setup()
     {
-         var app = new WebApplicationFactory<Program>()
-            .WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureServices(services =>
-                {
-                    // set up servises
-                });
-            });
+        var app = new WebApplicationFactory<Program>()
+           .WithWebHostBuilder(builder =>
+           {
+               builder.ConfigureServices(services =>
+               {
+                   // set up servises
+               });
+           });
         _testServer = app.Server;
         _testClient = app.CreateClient();
     }

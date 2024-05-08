@@ -61,7 +61,7 @@ public class MailJetEmailClient(IConfiguration configuration) : IEmailClient
 {
     private static HttpClient _client = new();
     private readonly IConfiguration _configuration = configuration;
-    
+
     public async Task<HttpResponseMessage> SendEmail(EmailModel model)
     {
         var apiKey = _configuration["Mailjet:ApiKey"];

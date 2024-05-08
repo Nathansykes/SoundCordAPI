@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Logging.AzureAppServices;
@@ -9,10 +8,8 @@ using Project.Application.Groups;
 using Project.Application.Messages;
 using Project.Application.Songs;
 using Project.Auth;
-using Project.Auth.Identity.Models;
 using Project.Domain;
 using Project.Domain.Channels;
-using Project.Domain.Exceptions;
 using Project.Domain.Files;
 using Project.Domain.Files.FileUploading;
 using Project.Domain.Groups;
@@ -72,7 +69,7 @@ public static class ServicesExtensions
         services.AddMemoryCache();
         services.AddCors(options =>
         {
-            options.AddPolicy("CorsPolicy",builder =>
+            options.AddPolicy("CorsPolicy", builder =>
             {
                 builder.AllowAnyHeader()
                        .AllowAnyMethod()
