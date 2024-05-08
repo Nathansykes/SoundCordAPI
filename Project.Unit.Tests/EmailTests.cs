@@ -14,6 +14,7 @@ internal class MockEmailClient : IEmailClient
 
 }
 
+[TestFixture]
 public class EmailTests
 {
     private EmailService _emailService = null!;
