@@ -11,8 +11,6 @@ public static class ApplicationExtensions
     {
         app.UseExceptionHandler(_ => { });
 
-        app.MapPost("ping", () => Results.Ok("pong"));
-
         app.MapPost("api/wakeup", async (IApplicationDbContext _context) =>
         {
             var available = await _context.Database.CanConnectAsync();
