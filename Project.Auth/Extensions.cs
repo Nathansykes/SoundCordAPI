@@ -20,10 +20,10 @@ public class AuthorizationExtensions(UserManager<ApplicationUser> userManager)
 
             var decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials!));
 
-            var email = decodedCredentials.Split(':', 2)[0];
+            var username = decodedCredentials.Split(':', 2)[0];
             var password = decodedCredentials.Split(':', 2)[1];
 
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByNameAsync(username);
             if (user is not null && await _userManager.CheckPasswordAsync(user, password))
             {
                 return user;

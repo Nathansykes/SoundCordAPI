@@ -53,7 +53,15 @@ class SwaggerAuthorizationFilter(IServiceProvider serviceProvider) : IDocumentFi
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
         InitializeServices();
-        var userRoles = Task.Run(GetUserRoles).GetAwaiter().GetResult().ToList();
+        List<string> userRoles;
+        try
+        {
+            userRoles = Task.Run(GetUserRoles).GetAwaiter().GetResult().ToList();
+        }
+        catch
+        {
+            userRoles = [];
+        }
 
         var apiDescriptions = context.ApiDescriptions.Where(path => path.ActionDescriptor.EndpointMetadata.Any(attr => attr is AuthorizeAttribute)).ToList();
         foreach (var apiDescription in apiDescriptions)
