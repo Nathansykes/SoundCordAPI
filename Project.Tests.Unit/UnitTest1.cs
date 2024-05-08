@@ -48,9 +48,9 @@ public class EmailTests
     public void SendEmailShouldErrorWhenRecipientInvalidEmail()
     {
         // Arrange
-        string recipient = "";
-        string subject = "";
-        string body = "";
+        string recipient = "not an email";
+        string subject = "subject";
+        string body = "body";
 
 
         // Assert
@@ -67,7 +67,7 @@ public class EmailTests
         // Arrange
         string recipient = "test@test.com";
         string subject = "";
-        string body = "";
+        string body = "body";
 
 
         // Assert
