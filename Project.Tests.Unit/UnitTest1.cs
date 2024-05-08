@@ -17,7 +17,7 @@ internal class MockEmailClient : IEmailClient
 
 public class EmailTests
 {
-    private IEmailService _emailService = null!;
+    private EmailService _emailService = null!;
     private MockEmailClient _client = null!;
 
     [SetUp]
