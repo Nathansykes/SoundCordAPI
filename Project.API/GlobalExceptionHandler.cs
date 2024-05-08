@@ -19,12 +19,12 @@ namespace Project.API;
 
 
 public class HubExceptionFilter(
-    EmailService emailService,
+    IEmailService emailService,
     IWebHostEnvironment webHostEnvironment,
     ILogger<HubExceptionFilter> logger) : IHubFilter
 {
     private readonly ILogger<HubExceptionFilter> _logger = logger;
-    private readonly EmailService _emailService = emailService;
+    private readonly IEmailService _emailService = emailService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
     public async ValueTask<object?> InvokeMethodAsync(HubInvocationContext invocationContext, Func<HubInvocationContext, ValueTask<object?>> next)
@@ -71,13 +71,13 @@ public class GlobalExceptionHandler(
     ILogger<GlobalExceptionHandler> logger,
     IConfiguration configuration,
     ProblemDetailsFactory problemDetailsFactory,
-    EmailService emailService,
+    IEmailService emailService,
     IWebHostEnvironment webHostEnvironment) : IExceptionHandler
 {
     private readonly ILogger _logger = logger;
     private readonly IConfiguration _configuration = configuration;
     private readonly ProblemDetailsFactory _problemDetailsFactory = problemDetailsFactory;
-    private readonly EmailService _emailService = emailService;
+    private readonly IEmailService _emailService = emailService;
     private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
