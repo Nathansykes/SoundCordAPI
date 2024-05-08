@@ -13,14 +13,14 @@ public class AuthorizationService(
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
     IOptionsMonitor<BearerTokenOptions> bearerTokenOptions,
-    EmailService emailService,
+    IEmailService emailService,
     IConfiguration configuration)
 {
     private readonly IUserStore<ApplicationUser> _userStore = userStore;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly IOptionsMonitor<BearerTokenOptions> _bearerTokenOptions = bearerTokenOptions;
-    private readonly EmailService _emailService = emailService;
+    private readonly IEmailService _emailService = emailService;
     private readonly IConfiguration _configuration = configuration;
     private static readonly EmailAddressAttribute _emailAddressAttribute = new();
 

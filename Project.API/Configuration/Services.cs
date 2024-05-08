@@ -89,7 +89,8 @@ public static class ServicesExtensions
         services.AddRouting(options => options.LowercaseUrls = true);
 
 
-        services.AddSingleton<EmailService>();
+        services.AddSingleton<IEmailClient, MailJetEmailClient>();
+        services.AddSingleton<IEmailService, EmailService>();
 
         services.AddScoped<ICurrentUserAccessor, CurrentUserAccessor>();
 
