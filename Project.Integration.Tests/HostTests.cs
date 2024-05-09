@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using System.Net;
 
 namespace Project.Integration.Tests;
 
@@ -35,6 +36,7 @@ public class HostTests
     public void ApplicationShouldBuild()
     {
         // Act
+        _ = _testServer;
 
         // Assert
         Assert.Pass();
@@ -49,7 +51,20 @@ public class HostTests
         var content = await response.Content.ReadAsStringAsync();
 
         // Assert
-        Assert.That(response.IsSuccessStatusCode);
-        Assert.That(content, Is.EqualTo("Hello World"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.IsSuccessStatusCode);
+            Assert.That(content, Is.EqualTo("Hello World"));
+        });
+    }
+
+    [Test]
+    public async Task AuthorizationShouldBeEnabled()
+    {
+        // Act
+        var response = await _testClient.GetAsync("api/account/user");
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
 }
