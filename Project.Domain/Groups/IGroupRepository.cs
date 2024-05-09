@@ -1,4 +1,4 @@
-﻿namespace Project.Application.Groups;
+﻿namespace Project.Domain.Groups;
 public interface IGroupRepository<TGroupEntity> where TGroupEntity : new()
 {
     void AddUserToGroup(Guid id, string userName);

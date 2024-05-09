@@ -1,4 +1,4 @@
-﻿using Project.Application.Groups;
+﻿using Project.Domain.Groups;
 using Project.Domain.Exceptions;
 using Project.Infrastructure.Model;
 using Project.Infrastructure.Model.Entities;
