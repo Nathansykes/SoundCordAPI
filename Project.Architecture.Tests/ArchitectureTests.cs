@@ -5,7 +5,7 @@ using static Project.Architecture.Tests.Assemblies;
 
 namespace Project.Architecture.Tests;
 
-public class ArchitectureTests 
+public class ArchitectureTests
 {
     [Test]
     public void DomainShouldNotReferenceOtherProjects()
