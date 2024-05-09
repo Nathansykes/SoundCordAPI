@@ -32,7 +32,7 @@ public class EmailTests
     public async Task SendEmailShouldCompleteSuccesfullyWithCorrectParameters()
     {
         // Arrange
-        string recipient = "test@test.com";
+        string recipient = "";
         string subject = "subject";
         string body = "body";
 
