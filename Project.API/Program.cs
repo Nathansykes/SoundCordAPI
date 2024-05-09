@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
-    options.Limits.MaxRequestBodySize = null;
+    options.Limits.MaxRequestBodySize = 524_288_000;
 });
 
 builder.ConfigureLogging();
